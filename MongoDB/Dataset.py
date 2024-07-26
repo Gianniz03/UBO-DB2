@@ -6,8 +6,9 @@ fake = Faker()
 
 # Definizione delle costanti
 NUM_COMPANIES = 10000
-NUM_UBO = 1000  # Numero di UBO da generare
-NUM_TRANSACTIONS = 20000  # Numero di transazioni da generare
+NUM_UBO = 1000
+NUM_TRANSACTIONS = 20000
+NUM_KYC_AML_CHECKS = 5000  # Numero di controlli KYC/AML da generare
 
 # Genera nomi di forma giuridica
 forme_giuridiche = ['S.r.l.', 'S.p.A.', 'S.a.S.', 'S.n.C.', 'S.r.l. a socio unico', 'Cooperative', 'Onlus']
@@ -17,6 +18,7 @@ valute = ['EUR', 'USD', 'GBP', 'JPY', 'AUD']
 used_company_ids = set()
 used_ubo_ids = set()
 used_transaction_ids = set()
+used_kyc_aml_ids = set()
 
 # Creazione della collezione 'Aziende'
 with open('Dataset/companies.csv', 'w', newline='') as csvfile:
@@ -95,3 +97,26 @@ with open('Dataset/transactions.csv', 'w', newline='') as csvfile:
         used_transaction_ids.add(transaction_id)
 
 print("File CSV 'transactions.csv' creato con successo.")
+
+# Creazione della collezione 'Controlli KYC/AML'
+with open('Dataset/kyc_aml_checks.csv', 'w', newline='') as csvfile:
+    fieldnames = ['id', 'tipo', 'esito', 'data', 'note']
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writeheader()
+
+    for kyc_aml_id in range(1, NUM_KYC_AML_CHECKS + 1):
+        check_type = random.choice(['Verifica Identità', 'Controllo Sanzioni', 'Monitoraggio Transazioni'])
+        result = random.choice(['Passato', 'Fallito'])
+        date = fake.date_between(start_date='-5y', end_date='today')
+        notes = fake.text(max_nb_chars=200)
+
+        writer.writerow({
+            'id': kyc_aml_id,
+            'tipo': check_type,
+            'esito': result,
+            'data': date,
+            'note': notes
+        })
+        used_kyc_aml_ids.add(kyc_aml_id)
+
+print("File CSV 'kyc_aml_checks.csv' creato con successo.")
