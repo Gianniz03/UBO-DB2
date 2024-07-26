@@ -22,13 +22,13 @@ used_kyc_aml_ids = set()
 
 # Creazione della collezione 'Aziende'
 with open('Dataset/companies.csv', 'w', newline='') as csvfile:
-    fieldnames = ['company_id', 'company_name', 'company_address', 'legal_form', 'registration_details', 'financial_data']
+    fieldnames = ['id', 'name', 'address', 'legal_form', 'registration_details', 'financial_data']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
 
     for company_id in range(1, NUM_COMPANIES + 1):
-        company_name = fake.company()
-        company_address = fake.address()
+        name = fake.company()
+        address = fake.address()
         legal_form = random.choice(legal_forms)
         registration_details = fake.ssn()  # Simuliamo i dettagli di registrazione con numeri di previdenza sociale
         financial_data = [
@@ -37,9 +37,9 @@ with open('Dataset/companies.csv', 'w', newline='') as csvfile:
         ]
         
         writer.writerow({
-            'company_id': company_id,
-            'company_name': company_name,
-            'company_address': company_address,
+            'id': company_id,
+            'name': name,
+            'address': address,
             'legal_form': legal_form,
             'registration_details': registration_details,
             'financial_data': financial_data
@@ -82,14 +82,14 @@ with open('Dataset/transactions.csv', 'w', newline='') as csvfile:
     writer.writeheader()
 
     for transaction_id in range(1, NUM_TRANSACTIONS + 1):
-        transaction_type = random.choice(['Purchase', 'Sale', 'Payment', 'Refund'])
+        type = random.choice(['Purchase', 'Sale', 'Payment', 'Refund'])
         amount = round(random.uniform(10.0, 10000.0), 2)
         date = fake.date_between(start_date='-5y', end_date='today')
         currency = random.choice(currencies)
 
         writer.writerow({
             'id': transaction_id,
-            'type': transaction_type,
+            'type': type,
             'amount': amount,
             'date': date,
             'currency': currency
@@ -105,14 +105,14 @@ with open('Dataset/kyc_aml_checks.csv', 'w', newline='') as csvfile:
     writer.writeheader()
 
     for kyc_aml_id in range(1, NUM_KYC_AML_CHECKS + 1):
-        check_type = random.choice(['Identity Verification', 'Sanctions Check', 'Transaction Monitoring'])
+        type = random.choice(['Identity Verification', 'Sanctions Check', 'Transaction Monitoring'])
         result = random.choice(['Passed', 'Failed'])
         date = fake.date_between(start_date='-5y', end_date='today')
         notes = fake.text(max_nb_chars=200)
 
         writer.writerow({
             'id': kyc_aml_id,
-            'type': check_type,
+            'type': type,
             'result': result,
             'date': date,
             'notes': notes
