@@ -40,3 +40,314 @@ with open('Dataset/companies.csv', 'w', newline='') as csvfile:
         used_company_ids.add(company_id)
 
 print("File CSV 'dataset_companies.csv' creato con successo.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+NUM_AMMINISTRATORI = 100  # Numero di amministratori da generare
+
+# Creazione della collezione 'Administrators'
+with open('Dataset/administrators.csv', 'w', newline='') as csvfile:
+    fieldnames = ['id', 'nome', 'indirizzo', 'data_di_nascita', 'nazionalità']
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writeheader()
+
+    for amministratore_id in range(1, NUM_AMMINISTRATORI + 1):
+        nome = fake.name()
+        indirizzo = fake.address()
+        data_di_nascita = fake.date_of_birth(minimum_age=25, maximum_age=70).strftime('%Y-%m-%d')
+        nazionalità = fake.country()
+
+        writer.writerow({
+            'id': amministratore_id,
+            'nome': nome,
+            'indirizzo': indirizzo,
+            'data_di_nascita': data_di_nascita,
+            'nazionalità': nazionalità
+        })
+
+print("File CSV 'administrators.csv' creato con successo.")
+
+
+NUM_AZIONISTI = 100  # Numero di azionisti da generare
+
+# Creazione della collezione 'Shareholders'
+with open('Dataset/shareholders.csv', 'w', newline='') as csvfile:
+    fieldnames = ['id', 'nome', 'tipo', 'percentuale_partecipazione', 'indirizzo', 'data_di_nascita', 'nazionalità']
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writeheader()
+
+    for azionista_id in range(1, NUM_AZIONISTI + 1):
+        nome = fake.name()
+        tipo = random.choice(['Persona', 'Azienda'])
+        percentuale_partecipazione = round(random.uniform(0.1, 100), 2)  # Percentuale tra 0.1 e 100
+        indirizzo = fake.address()
+
+        # I campi data_di_nascita e nazionalità sono compilati solo se il tipo è 'Persona'
+        data_di_nascita = fake.date_of_birth(minimum_age=18, maximum_age=90).strftime('%Y-%m-%d') if tipo == 'Persona' else ''
+        nazionalità = fake.country() if tipo == 'Persona' else ''
+
+        writer.writerow({
+            'id': azionista_id,
+            'nome': nome,
+            'tipo': tipo,
+            'percentuale_partecipazione': percentuale_partecipazione,
+            'indirizzo': indirizzo,
+            'data_di_nascita': data_di_nascita,
+            'nazionalità': nazionalità
+        })
+
+print("File CSV 'shareholders.csv' creato con successo.")
