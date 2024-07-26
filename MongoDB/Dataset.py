@@ -7,13 +7,16 @@ fake = Faker()
 # Definizione delle costanti
 NUM_COMPANIES = 10000
 NUM_UBO = 1000  # Numero di UBO da generare
+NUM_TRANSACTIONS = 20000  # Numero di transazioni da generare
 
 # Genera nomi di forma giuridica
 forme_giuridiche = ['S.r.l.', 'S.p.A.', 'S.a.S.', 'S.n.C.', 'S.r.l. a socio unico', 'Cooperative', 'Onlus']
+valute = ['EUR', 'USD', 'GBP', 'JPY', 'AUD']
 
 # Inizializza la lista per tracciare gli ID già assegnati
 used_company_ids = set()
 used_ubo_ids = set()
+used_transaction_ids = set()
 
 # Creazione della collezione 'Aziende'
 with open('Dataset/companies.csv', 'w', newline='') as csvfile:
@@ -41,7 +44,7 @@ with open('Dataset/companies.csv', 'w', newline='') as csvfile:
         })
         used_company_ids.add(company_id)
 
-print("File CSV 'dataset_companies.csv' creato con successo.")
+print("File CSV 'companies.csv' creato con successo.")
 
 # Creazione della collezione 'Proprietari Benefici Ultimi (UBO)'
 with open('Dataset/ubo.csv', 'w', newline='') as csvfile:
@@ -68,4 +71,27 @@ with open('Dataset/ubo.csv', 'w', newline='') as csvfile:
         })
         used_ubo_ids.add(ubo_id)
 
-print("File CSV 'dataset_ubo.csv' creato con successo.")
+print("File CSV 'ubo.csv' creato con successo.")
+
+# Creazione della collezione 'Transazioni'
+with open('Dataset/transactions.csv', 'w', newline='') as csvfile:
+    fieldnames = ['id', 'tipo', 'importo', 'data', 'valuta']
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writeheader()
+
+    for transaction_id in range(1, NUM_TRANSACTIONS + 1):
+        transaction_type = random.choice(['Acquisto', 'Vendita', 'Pagamento', 'Rimborso'])
+        amount = round(random.uniform(10.0, 10000.0), 2)
+        date = fake.date_between(start_date='-5y', end_date='today')
+        currency = random.choice(valute)
+
+        writer.writerow({
+            'id': transaction_id,
+            'tipo': transaction_type,
+            'importo': amount,
+            'data': date,
+            'valuta': currency
+        })
+        used_transaction_ids.add(transaction_id)
+
+print("File CSV 'transactions.csv' creato con successo.")
