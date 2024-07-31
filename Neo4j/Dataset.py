@@ -39,28 +39,33 @@ def create_graph(graph, admins, shareholders, ubos, transactions, companies, kyc
 
         # Relazione con Amministratori
         for admin_id in eval(row['administrators']):
-            rel = Relationship(company_node, "AZIENDA_HA_AMMINISTRATORE", admin_nodes[admin_id], ruolo="Amministratore", data_inizio=fake.date_between(start_date='-5y', end_date='-1y'), data_fine=None)
-            graph.create(rel)
+            if admin_id in admin_nodes:
+                rel = Relationship(company_node, "AZIENDA_HA_AMMINISTRATORE", admin_nodes[admin_id], ruolo="Amministratore", data_inizio=fake.date_between(start_date='-5y', end_date='-1y'), data_fine=None)
+                graph.create(rel)
 
         # Relazione con Azionisti
         for shareholder_id in eval(row['shareholders']):
-            rel = Relationship(company_node, "AZIENDA_HA_AZIONISTA", shareholder_nodes[shareholder_id], percentuale_partecipazione=random.uniform(0.1, 100), data_acquisto=fake.date_between(start_date='-10y', end_date='-1y'))
-            graph.create(rel)
+            if shareholder_id in shareholder_nodes:
+                rel = Relationship(company_node, "AZIENDA_HA_AZIONISTA", shareholder_nodes[shareholder_id], percentuale_partecipazione=random.uniform(0.1, 100), data_acquisto=fake.date_between(start_date='-10y', end_date='-1y'))
+                graph.create(rel)
 
         # Relazione con UBO
         for ubo_id in eval(row['ubo']):
-            rel = Relationship(company_node, "AZIENDA_HA_UBO", ubo_nodes[ubo_id], percentuale_partecipazione=random.uniform(0.1, 100), data_acquisto=fake.date_between(start_date='-10y', end_date='-1y'))
-            graph.create(rel)
+            if ubo_id in ubo_nodes:
+                rel = Relationship(company_node, "AZIENDA_HA_UBO", ubo_nodes[ubo_id], percentuale_partecipazione=random.uniform(0.1, 100), data_acquisto=fake.date_between(start_date='-10y', end_date='-1y'))
+                graph.create(rel)
 
         # Relazione con Transazioni
         for transaction_id in eval(row['transactions']):
-            rel = Relationship(company_node, "AZIENDA_HA_TRANSAZIONE", transaction_nodes[transaction_id], tipo=random.choice(['Purchase', 'Sale', 'Payment', 'Refund']), importo=random.uniform(10.0, 10000.0), data=fake.date_between(start_date='-5y', end_date='today'), valuta=random.choice(['EUR', 'USD', 'GBP', 'JPY', 'AUD']))
-            graph.create(rel)
+            if transaction_id in transaction_nodes:
+                rel = Relationship(company_node, "AZIENDA_HA_TRANSAZIONE", transaction_nodes[transaction_id], tipo=random.choice(['Purchase', 'Sale', 'Payment', 'Refund']), importo=random.uniform(10.0, 10000.0), data=fake.date_between(start_date='-5y', end_date='today'), valuta=random.choice(['EUR', 'USD', 'GBP', 'JPY', 'AUD']))
+                graph.create(rel)
 
     # Relazione tra UBO e Controlli KYC/AML
     for _, row in kyc_aml_checks.iterrows():
-        rel = Relationship(ubo_nodes[row['ubo_id']], "UBO_HA_CONTROLLI", Node("Controllo_KYC_AML", id=row['id'], type=row['type'], result=row['result'], date=row['date'], notes=row['notes']), tipo=row['type'], esito=row['result'], data=row['date'], note=row['notes'])
-        graph.create(rel)
+        if row['ubo_id'] in ubo_nodes:
+            rel = Relationship(ubo_nodes[row['ubo_id']], "UBO_HA_CONTROLLI", Node("Controllo_KYC_AML", id=row['id'], type=row['type'], result=row['result'], date=row['date'], notes=row['notes']), tipo=row['type'], esito=row['result'], data=row['date'], note=row['notes'])
+            graph.create(rel)
 
 # Lettura dei dati dai CSV
 admins = pd.read_csv('Dataset/administrators.csv', encoding='ISO-8859-1')
