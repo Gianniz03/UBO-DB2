@@ -1,201 +1,201 @@
-id,nome,tipo,percentuale_partecipazione,indirizzo,data_di_nascita,nazionalità
-1,James Thomas,Azienda,88.69,"8324 Henderson Forge Suite 282
-Jonesfort, DE 46037",,
-2,Charles Murphy,Persona,6.51,"237 Reeves Cove
-Lake Jacqueline, HI 72400",1966-05-26,Poland
-3,Shannon Brooks,Persona,14.91,"324 Sharon Oval Apt. 398
-Davidstad, ME 41574",1984-05-16,Cocos (Keeling) Islands
-4,Ann Ramos,Persona,18.65,"USNV Mitchell
-FPO AE 18075",1945-07-21,Ghana
-5,Tiffany Black,Persona,34.22,"212 Smith Plain
-Harrisonshire, OK 55351",1953-09-28,Rwanda
-6,Elizabeth Schmidt,Azienda,25.48,"8148 Phillips Key
-Saratown, WV 06963",,
-7,Andrew Hernandez,Azienda,45.0,"Unit 5165 Box 6592
-DPO AE 76111",,
-8,Danielle House,Persona,46.3,"318 Teresa Plaza Apt. 082
-Knoxshire, PR 16100",1978-10-13,Barbados
-9,Todd Russell,Azienda,69.89,"27605 Andrews Lock
-South Jay, TN 63821",,
-10,Susan Brown,Persona,29.95,"4471 Christian Squares Suite 558
-Jenniferview, OH 82161",1995-06-04,Congo
-11,Laura Dennis,Persona,32.44,"PSC 8502, Box 1897
-APO AE 95219",1954-01-25,Albania
-12,Emily Galvan,Persona,36.67,"42573 Natalie Station
-Carpenterbury, SC 60387",1953-11-23,Cyprus
-13,Daniel Strickland,Azienda,45.5,"9335 Christina Underpass Suite 484
-Timothyshire, TX 47165",,
-14,Jonathan Gonzalez,Azienda,10.7,"54167 Steven Lock
-Troyton, MA 54473",,
-15,Eric Dawson,Persona,54.55,"55725 Campos Walks
-New Kathleenshire, NH 45306",1967-03-10,Yemen
-16,Antonio Roman,Azienda,40.34,"7697 Cruz Motorway Apt. 960
-North Michael, CA 14638",,
-17,Briana Parrish,Azienda,90.58,"286 Miller Path
-Port Stephen, WI 95794",,
-18,Mary Berg,Azienda,95.0,"USNV Smith
-FPO AE 35894",,
-19,Kevin Shea,Azienda,43.76,"7566 Sanchez Stravenue Suite 222
-Smithview, MT 22015",,
-20,Mary Davis,Azienda,36.4,"74815 Erik Plains Apt. 498
-Alexisport, KY 36544",,
-21,Joshua Alvarado,Persona,84.62,"26287 Stephanie Divide
-Mannland, MT 27650",1949-11-17,French Polynesia
-22,Jean Mooney,Azienda,46.24,"7890 Rodgers Drive
-Port Eugeneville, NH 77160",,
-23,Zachary Bailey,Azienda,15.32,"962 Jackson Trace Suite 476
-Lake Andrewstad, ME 46140",,
-24,Anthony Edwards,Persona,37.42,"0187 Lynn Drive Apt. 024
-Erinhaven, MD 60274",1942-08-10,Azerbaijan
-25,John Trevino,Persona,62.6,"616 Charles Estates
-Matthewburgh, KY 57941",1937-05-07,Israel
-26,Rhonda Pierce,Azienda,26.59,"0664 Shea Radial Suite 561
-New Jennyport, OH 05532",,
-27,Mrs. Sandra Wilson,Persona,63.18,"9103 Mercado Tunnel Apt. 031
-West Jamiemouth, TX 82519",1954-08-31,Andorra
-28,Lori Moore,Azienda,77.84,"2734 Vincent Stravenue
-Anthonyborough, MI 88782",,
-29,Christina Rich,Persona,83.87,"63311 Sara Orchard
-Mitchellland, SC 97167",1965-12-23,Ireland
-30,Nicole Bell,Azienda,50.69,"2597 Johnson Bridge
-Jeffreyfurt, AL 71538",,
-31,Brett Cook,Azienda,62.16,"7578 Terri Islands Suite 067
-North Shane, WA 90294",,
-32,Jim Garcia,Persona,19.94,"545 Shane Circles
-Mckeefurt, FL 84706",1985-11-06,Moldova
-33,Barbara Watson,Azienda,60.55,"18837 Reese Street Apt. 627
-West Robert, KS 95861",,
-34,Tanya Cruz,Azienda,95.21,"PSC 6581, Box 4319
-APO AP 02483",,
-35,Melissa Kerr,Azienda,7.5,"47567 Gary Neck Apt. 945
-Carrieport, IN 65036",,
-36,Lisa Hayes,Azienda,59.74,"495 Novak River Apt. 633
-Port Susan, WY 65756",,
-37,Manuel Morgan,Persona,40.58,"09568 Jessica Hollow
-Lake Jenniferberg, WA 08004",1936-08-10,Romania
-38,Brenda Walter,Azienda,10.23,"3016 George Skyway Apt. 954
-Port Patricia, UT 26634",,
-39,Ashley Morris,Persona,97.63,"5616 Skinner Harbor
-West Mark, GU 22429",1984-01-04,Guinea-Bissau
-40,David Mann,Azienda,98.7,"832 Rodriguez Point Apt. 518
-North Ashley, OK 15658",,
-41,David Johnson,Persona,55.27,"253 Crawford Mountain Apt. 291
-New Cynthia, CT 39173",1950-07-22,Argentina
-42,Shannon Goodman,Persona,98.76,"03761 Morris Junction
-Simmonsmouth, HI 07504",1946-12-17,Angola
-43,Chase Newton,Persona,3.24,"9735 Alexandra Trace Suite 778
-North Rebecca, OH 17603",1946-01-21,Suriname
-44,Darrell Mendez,Persona,64.96,"906 Stanley Center Apt. 640
-New Megan, KY 16862",1985-04-22,Germany
-45,Erika Sutton,Persona,87.66,"510 Stephanie Garden Apt. 677
-East Tammyton, NC 31915",1991-06-06,Egypt
-46,Bryan Myers,Azienda,65.84,"4757 Turner Bypass Suite 931
-West Jessica, DC 36870",,
-47,Alex Christensen,Persona,86.33,"647 Alison Dale
-Oliverbury, NE 84808",1969-07-15,Mauritius
-48,Henry Wall,Azienda,22.75,"22990 Shepard Pine Suite 352
-Kimberlyshire, KS 20777",,
-49,Katrina Clark,Azienda,85.73,"90355 Mary Burgs Apt. 604
-Jimenezfurt, TX 76322",,
-50,Rachael Barr,Azienda,41.84,"69877 Samantha Forge Suite 871
-New Lindsey, ID 05369",,
-51,Michael Austin DDS,Azienda,92.98,"3340 Liu Pike Apt. 301
-West Adamhaven, MD 16223",,
-52,Jane Jacobson,Persona,98.08,"79177 Kirk Views Suite 337
-Danielsstad, WY 02969",1989-06-14,Samoa
-53,Kaitlyn Day,Persona,69.51,"PSC 5451, Box 7757
-APO AE 46284",1952-09-19,Bulgaria
-54,Jessica Mccarty,Persona,51.33,"492 Angela Fork
-Johnsonburgh, ND 16676",1955-12-10,India
-55,Joshua Barnett,Azienda,49.27,"6939 Yolanda Forge
-Chavezhaven, PR 11954",,
-56,Ashley Mcdonald,Azienda,36.71,"71722 Ramos Inlet
-West Gwendolyn, AZ 10873",,
-57,Wesley Molina,Azienda,81.01,"USNS Bush
-FPO AP 44815",,
-58,Curtis Collins,Persona,97.56,"119 Steven Light Apt. 249
-East Wandaborough, MI 72383",1961-08-01,Sierra Leone
-59,Andrea Brown,Persona,97.77,"81438 Rachel Trace Apt. 605
-New Johnborough, AK 08843",1946-06-26,Guatemala
-60,Sarah Schultz,Persona,74.86,"85817 Harris Cliffs
-Campbellstad, ND 54814",1972-02-12,Cayman Islands
-61,Nicole Stewart,Persona,3.91,"941 Amanda Keys
-New Donnaland, AZ 03731",1937-01-08,Palau
-62,David Jones,Persona,57.25,"3038 Chavez Causeway
-Thompsonberg, WV 71392",2004-04-06,Guatemala
-63,Lisa Williams,Persona,29.16,"094 Hopkins Fork Apt. 820
-South Johnview, MD 36883",1969-01-20,Syrian Arab Republic
-64,Timothy Riddle,Azienda,48.48,"7958 Clark Bypass
-East Theodore, LA 80469",,
-65,Candice Perkins,Azienda,55.66,"7036 Tanner Parkways Suite 094
-West Susan, AL 50684",,
-66,Bruce Burton,Azienda,71.73,"1097 Bautista Orchard
-Bakerport, MO 59745",,
-67,Kevin Boyle,Persona,97.62,"892 Brown Loop
-Michelleside, OR 33488",1970-07-04,Iceland
-68,Rebecca Phillips,Azienda,72.52,"477 Johnson Dam
-South Jenny, WV 92199",,
-69,Kayla Chen,Azienda,86.04,"Unit 7398 Box 2470
-DPO AE 49841",,
-70,Gary Olson,Persona,82.56,"381 Lin Mill
-New Johnbury, IN 06887",1935-08-02,Cayman Islands
-71,Hailey Horn,Azienda,7.56,"13190 Myers Trail
-Mullinsbury, NE 35779",,
-72,Ricky Jimenez,Persona,73.15,"58495 Baker Pike
-Wilsontown, AR 34326",1963-10-28,Northern Mariana Islands
-73,Jared Armstrong,Persona,17.6,"25958 Berry Village
-Myersport, FM 87398",2001-05-12,American Samoa
-74,Thomas Perkins,Azienda,66.71,"2718 Gilbert Mountain
-Ianchester, NY 01170",,
-75,Elizabeth Peterson,Azienda,53.38,"68052 Jones Ridge
-Port Alyssa, AR 71970",,
-76,Andrew Cardenas,Azienda,85.59,"87942 Thomas Underpass Apt. 121
-East Troyhaven, MA 84412",,
-77,Kara Davis,Persona,92.68,"Unit 8896 Box 1567
-DPO AE 73337",1969-01-13,Egypt
-78,Danny Ayers,Persona,66.4,"097 Brad Run Suite 988
-Travischester, MS 90739",1943-09-08,El Salvador
-79,Taylor Rodriguez,Azienda,89.89,"490 Gonzalez Fort
-Holtside, NH 61230",,
-80,George Price,Persona,65.73,"20526 Michael Mountains
-North Jennifermouth, TN 76017",1949-02-21,Cote d'Ivoire
-81,William Aguilar,Persona,15.94,"80758 Murphy Ford Apt. 175
-West Rhonda, FM 22243",1944-03-25,Colombia
-82,Scott Smith,Persona,17.54,"685 Thompson Avenue
-Mccormickmouth, NE 85283",1980-07-01,French Southern Territories
-83,Dr. Sherri Nicholson DVM,Persona,46.73,"895 Richard Hill
-Davisstad, WI 83538",1991-03-25,Saint Martin
-84,Mrs. Betty Chavez MD,Azienda,63.89,"5064 Paul Crest
-Blevinsport, GA 16618",,
-85,Karla Murray,Azienda,23.71,"2290 Jasmine Station
-Randolphburgh, CT 47615",,
-86,Haley Moon,Azienda,64.89,"23948 Sally Plaza
-North Alicemouth, IN 35013",,
-87,Tracy Sosa,Azienda,42.5,"10138 Lindsey Club Apt. 388
-Morganton, VA 42049",,
-88,Erin Wright,Persona,92.97,"3463 Norman Stravenue Suite 054
-North Elizabethside, WY 39705",1990-05-12,Philippines
-89,Alexander Reyes,Persona,16.9,"64011 Christine Turnpike
-Jefferytown, CT 11365",1991-12-27,Czech Republic
-90,Gregory Lowe,Azienda,48.55,"7949 Marsh Fall Suite 266
-East Tonyburgh, TX 27213",,
-91,Brianna Nelson,Azienda,15.4,"7146 Ramirez Stream
-East Seanview, MO 91611",,
-92,Stephanie Martinez,Persona,89.3,"15807 Neal Lock
-West Luke, DC 50433",1985-10-08,Iceland
-93,Ellen Wallace,Persona,5.55,"8650 Smith Falls Apt. 091
-West Donnaville, PW 01357",1946-11-12,Israel
-94,Jason Flores,Persona,22.4,"PSC 3564, Box 7086
-APO AA 94642",1939-07-20,Turkmenistan
-95,Erica Gross,Persona,81.87,"96730 Joseph Avenue Apt. 151
-Kellyfort, TX 52816",1988-08-07,Ethiopia
-96,Gary White,Persona,47.56,"22252 Kimberly Forge
-Aprilborough, PW 43416",1959-12-13,Saint Martin
-97,Molly Robertson,Azienda,96.27,"18978 Stein Road
-North Williamborough, PA 07496",,
-98,Diana Garrison,Persona,2.26,"578 John Mill Suite 245
-Mccannfort, DE 26088",1937-09-04,Trinidad and Tobago
-99,Zachary Nichols,Azienda,90.6,"48056 Bowers Villages
-Port Renee, FL 21384",,
-100,Sarah Smith,Azienda,4.45,"084 Lin Islands Apt. 452
-Jimenezchester, LA 59592",,
+id,name,type,ownership_percentage,address,date_of_birth,nationality
+1,Kim Villa,Person,64.35,"21892 Adam Forges
+Thorntonside, GU 95702",1997-03-25,Syrian Arab Republic
+2,Lucas French,Company,94.32,"69488 Zachary Well Apt. 724
+Hillberg, OK 93607",,
+3,David Riggs,Person,94.77,"2420 Steven Estates
+Newmanbury, ME 54283",2001-10-21,Northern Mariana Islands
+4,Jordan Smith,Person,89.39,"8681 Jerry Drives Suite 096
+West David, UT 45548",1961-12-07,Rwanda
+5,Stephen Robertson,Person,20.88,"7145 Fox Ranch
+Lake Lindafort, NY 82120",2001-06-24,French Guiana
+6,Karen Henry,Person,92.49,"183 Kim Estates Apt. 418
+East Timothybury, NV 91686",1967-01-25,Bangladesh
+7,Shelley Woodard,Company,88.29,"8623 John Mountains
+Anthonyton, ID 56565",,
+8,James Allen,Company,19.84,"937 Camacho Avenue Suite 370
+Lake David, GU 84877",,
+9,Johnny Murphy,Company,73.01,"6760 Jimmy Fork Apt. 442
+New Tiffanyfort, GU 67737",,
+10,Tina Thomas,Person,49.1,"94592 Paul Way Suite 498
+Joshuahaven, PA 13835",1999-02-26,Azerbaijan
+11,Tammy Beck,Person,78.07,"USS Rosales
+FPO AP 85427",1996-05-16,Belize
+12,Natasha Lopez,Company,76.72,"260 Mendoza Row Suite 316
+Lake Larryland, AR 71320",,
+13,Timothy Choi,Company,38.42,"1379 Byrd Tunnel
+East Anthonyshire, NH 03206",,
+14,Kevin Rhodes,Person,26.6,"1359 Perez Hollow
+Wellsport, NV 36005",1979-07-01,Bosnia and Herzegovina
+15,Christy Fleming,Person,42.38,"121 Gill Curve Suite 398
+East Marvin, KY 73903",1981-07-19,New Caledonia
+16,Morgan Franco,Company,55.38,"728 Lewis Shore
+West James, WI 30813",,
+17,Philip Davis,Company,65.0,"5628 Cortez Crescent
+Port Bobbymouth, WA 16234",,
+18,Kelly Cooper,Person,55.65,"47016 Michelle Fork
+Cervantesberg, IL 75039",1961-08-21,Uzbekistan
+19,Andrew Jackson,Person,58.82,"489 James Pines
+Port Elizabeth, VT 61466",1941-06-04,Gambia
+20,Dr. Breanna Adkins,Company,48.61,"51541 Mclaughlin Creek Suite 469
+Valerieton, FM 83822",,
+21,Cynthia Lopez,Company,14.72,"0142 Victoria Island Apt. 365
+Danielborough, AK 25978",,
+22,Shannon Chung,Person,48.72,"PSC 4992, Box 9381
+APO AE 55516",1956-05-17,Jamaica
+23,Robert Wilkins,Company,32.58,"2822 Williams Underpass Suite 593
+Millerfort, AS 65053",,
+24,Morgan Campbell,Person,92.49,"808 James Circles
+East Michael, HI 93012",2002-07-26,Bangladesh
+25,Angela Simmons,Person,69.88,"455 Brandy Pike Apt. 251
+West Timothymouth, NJ 96474",1961-12-23,Bahrain
+26,Alfred Smith,Person,86.7,"58883 Grimes Way Suite 194
+Gabrielville, MI 77804",1987-05-28,United States Virgin Islands
+27,Sarah Kaufman,Company,42.99,"764 Michaela Point
+Robertfurt, MA 47778",,
+28,Dale Pena,Company,74.52,"26456 Ortega Haven
+Jeremyfurt, KY 31961",,
+29,Edward Elliott,Company,86.82,"2234 Palmer Club Suite 327
+Reedfurt, NE 07970",,
+30,Robin Berg,Company,97.99,"295 Mark Squares Apt. 511
+New Jenniferstad, AS 87732",,
+31,Charles Bowers,Person,61.51,"9026 Wilson Prairie Suite 840
+Phyllisberg, OH 89001",1997-07-11,Honduras
+32,Tracy Flores,Company,52.88,"63945 Daniel Land Apt. 378
+Christopherborough, GA 22304",,
+33,Shaun Lee,Person,96.99,"428 Moran Stream
+Davidtown, PR 07281",1976-11-21,Haiti
+34,Joshua Jenkins,Person,74.2,"2727 Anthony Port Apt. 416
+Williamsburgh, NE 31354",1969-05-25,Vanuatu
+35,Michael Hayes,Person,15.15,"38104 Gail Stravenue
+Ambermouth, MA 80679",1938-12-25,Guadeloupe
+36,Brittney Oneal,Person,51.63,"85908 Flores Cape Suite 786
+South Elizabeth, WY 50872",1946-09-28,Luxembourg
+37,Alexandra Manning,Company,38.44,"81277 Timothy Streets Apt. 325
+North Deborahside, NE 98779",,
+38,David Scott,Person,63.96,"93315 Joshua Port
+Schmidtstad, VI 19711",1984-05-20,Niger
+39,Scott Horn,Company,2.11,"019 Herrera Meadows
+Lake Wendyborough, NV 48873",,
+40,John Lee,Company,19.71,"918 Baker Estates Apt. 201
+Normanland, NY 69822",,
+41,Andrew Harris,Company,27.76,"8137 Christopher Lakes
+Chenborough, FL 78084",,
+42,Felicia Christensen,Person,28.01,"Unit 3124 Box 8755
+DPO AE 16968",1976-04-20,Slovenia
+43,Dr. Mathew Miller,Person,17.36,"004 Allen Island
+Hayleymouth, WY 97764",1958-05-12,Trinidad and Tobago
+44,Brandon Reyes,Person,59.02,"80314 Giles Island
+New Cynthiaborough, MT 93345",2006-01-01,Netherlands
+45,Kerri Key,Person,23.69,"3506 Walker Station Suite 065
+East Eileenhaven, AK 73219",1938-10-03,Niger
+46,Alicia Chaney,Person,0.23,"PSC 3652, Box 1142
+APO AA 68153",1970-07-23,Isle of Man
+47,Eileen Newman,Person,38.41,"0511 Harris Locks
+East Davidchester, WA 04036",1962-07-15,Gabon
+48,Edward Johnson,Company,16.71,"2450 Walker Orchard Apt. 518
+Johntown, MA 80678",,
+49,Beth Parks,Company,22.04,"77105 Hayes Pass Suite 751
+South Josephfort, KS 48586",,
+50,Miranda Chaney,Person,94.71,"505 Miller Brooks Apt. 695
+North Nicoleton, KS 05298",2000-10-02,Kenya
+51,Richard Cole,Person,72.59,"745 Sherman Rest
+Harrisville, FM 85580",1975-10-07,Paraguay
+52,Melissa Porter,Person,51.16,"168 Kennedy Canyon Suite 555
+Gregorystad, DE 20597",1951-04-17,Guinea
+53,Richard Smith,Company,10.93,"PSC 4735, Box 2118
+APO AE 26602",,
+54,Michael Miller,Company,19.64,"264 James Causeway Apt. 760
+New Pamela, WI 77248",,
+55,Adam Turner,Company,28.41,"USS Campbell
+FPO AP 36578",,
+56,Amy Powell,Person,25.22,"2825 Mckee Port Suite 939
+Lake Kendra, DC 03569",1996-06-02,Kyrgyz Republic
+57,Melissa Palmer,Person,78.44,"10187 Browning Via
+Dianaburgh, CO 58274",1985-01-15,Panama
+58,Connie Abbott,Company,35.89,"52106 Henry Meadows Suite 604
+West Cindy, CO 41175",,
+59,Mr. Andrew Craig,Person,98.9,"USNV Martinez
+FPO AP 40635",2000-04-14,Lesotho
+60,Deanna Trujillo,Company,93.33,"321 Anderson Forges Apt. 133
+Fowlerchester, NV 98844",,
+61,Michael Lopez,Company,55.79,"06353 James Freeway Suite 370
+West Kevinchester, SC 75522",,
+62,Joseph Blake,Company,22.16,"85054 Zavala Plaza Suite 045
+West Joshua, VT 13190",,
+63,Denise Perry,Company,35.77,"9393 Howard Springs
+Lake Michael, NE 34317",,
+64,Thomas Ward,Company,18.03,"43004 Henry Walk
+Sabrinaside, CO 31930",,
+65,Lisa Douglas,Company,22.85,"164 Jefferson Shore
+Lake Sandratown, AS 76940",,
+66,Dr. Jessica Reid,Person,45.7,"7750 Kristin Rue Apt. 954
+North Christopher, TX 87101",1955-06-12,Luxembourg
+67,Glenda Adkins,Company,91.99,"5845 Karen Shoals Suite 400
+East Erikfurt, MT 81326",,
+68,Natasha Harris,Company,48.05,"97169 Cox Branch
+Ashleyside, GA 48042",,
+69,Sean Dalton,Person,38.2,"103 Lee Cove Apt. 459
+Brianview, FL 45181",1942-03-25,Korea
+70,James Perkins,Person,73.21,"529 Ruiz Grove Suite 140
+Wileystad, MP 63964",1935-12-25,France
+71,Allison Thompson,Company,48.23,"4313 Peters River
+North Lauraton, MH 77297",,
+72,Theodore Travis,Person,70.26,"217 Duffy Pines
+Katieville, PW 82230",1935-10-26,Australia
+73,Lynn Long,Person,54.17,"552 Wood Junction
+East Joseph, WV 53161",1965-08-23,Libyan Arab Jamahiriya
+74,James Fischer,Person,34.17,"513 Blackburn Rue
+Brownbury, ND 99594",1970-10-14,Egypt
+75,Edgar Mccormick,Person,77.66,"536 Joshua Crest
+Medinabury, GA 07239",1976-06-13,Lithuania
+76,Trevor Mosley,Company,65.67,"82587 Hopkins Glen Suite 330
+Petersfort, MT 53800",,
+77,Christopher Valentine,Person,17.32,"84743 Gina Walk Suite 824
+North Christopher, HI 19788",1947-12-21,British Indian Ocean Territory (Chagos Archipelago)
+78,Kaitlyn Hayes,Person,27.89,"7519 Jessica Squares
+East Kyletown, SD 71612",1951-11-30,Tokelau
+79,Stephen Hebert,Company,57.42,"8322 Davis Locks Suite 695
+South Angela, NC 01204",,
+80,Christina Garcia,Company,82.83,"964 Allison Pass
+West Paul, MT 86188",,
+81,Joseph Smith,Company,95.18,"8256 Joseph Cove Suite 179
+Mcclurefort, KS 54673",,
+82,Peter Coleman,Company,93.01,"9918 Eddie Shoal Suite 876
+West Brandyfort, VI 13394",,
+83,Julie Ryan,Company,67.99,"9410 Bass Drives Suite 245
+South Thomaschester, NM 82766",,
+84,Kevin Terry,Person,10.05,"591 French Summit Apt. 962
+South Nicole, KS 24464",1963-02-19,Palau
+85,Courtney Stephens,Person,47.2,"8070 Dickson Isle Apt. 102
+Linland, ME 80142",1971-08-15,Saint Pierre and Miquelon
+86,Christopher Ryan,Company,28.09,"722 Sue Points Apt. 704
+Turnerchester, TN 09101",,
+87,Michael Mitchell,Person,21.16,"6026 Cynthia Coves
+Nicholasmouth, KY 62630",1955-05-08,Malta
+88,Valerie Brown,Person,68.02,"393 Alexander Ports Apt. 813
+Jasminmouth, KS 38842",1945-10-22,Belarus
+89,John Anderson,Company,1.65,"193 Robert Burgs Suite 135
+South Zacharyshire, NE 73262",,
+90,Deborah Villanueva,Person,18.53,"34672 Elizabeth Highway
+Michaelfort, AS 53283",1986-09-26,Italy
+91,Caitlin Malone,Company,53.5,"68962 Brian Trail Apt. 575
+Josefort, AS 21348",,
+92,Anne Johnson,Company,27.39,"USCGC Sutton
+FPO AP 25228",,
+93,Andrew Brown,Company,76.23,"8745 Evan Passage
+North Joseph, IN 26795",,
+94,David Fields,Person,62.62,"94834 Elliott Ways
+Port Mary, WI 67657",2003-09-22,Korea
+95,James Walton,Company,7.39,"621 Clayton Squares
+Mccoyland, NV 04442",,
+96,Charles Lee,Person,22.82,"7771 Lucas Highway Suite 749
+Ryanchester, VT 11121",1954-11-06,New Caledonia
+97,Matthew Simmons,Person,16.78,"1144 Cummings Forge
+West Carolyn, MO 77034",1992-10-30,Peru
+98,Steven Cole,Company,56.61,"50522 Alyssa Plains Apt. 018
+Markton, UT 40869",,
+99,Martha Hudson,Company,31.91,"2127 Mendez Crest
+Amyshire, RI 51122",,
+100,Brian Herrera,Person,66.17,"PSC 9499, Box 1694
+APO AE 23188",1988-02-07,Jordan
