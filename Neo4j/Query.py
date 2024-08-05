@@ -1,4 +1,4 @@
-from py2neo import Graph
+from py2neo import Graph, Node
 import time
 import csv
 import scipy.stats as stats
@@ -10,6 +10,11 @@ graph100 = Graph("bolt://localhost:7687", user="neo4j", password="12345678", nam
 graph75 = Graph("bolt://localhost:7687", user="neo4j", password="12345678", name="dataset75")
 graph50 = Graph("bolt://localhost:7687", user="neo4j", password="12345678", name="dataset50")
 graph25 = Graph("bolt://localhost:7687", user="neo4j", password="12345678", name="dataset25")
+
+def custom_json_serializer(obj):
+    if isinstance(obj, Node):
+        return dict(obj)
+    raise TypeError("Type not serializable")
 
 # Funzione per calcolare l'intervallo di confidenza
 def calculate_confidence_interval(data, confidence=0.95):
@@ -65,8 +70,9 @@ def query3(graph):
     OPTIONAL MATCH (c)-[:COMPANY_HAS_ADMINISTRATOR]->(a:Administrators)
     OPTIONAL MATCH (c)-[:COMPANY_HAS_UBO]->(u:Ubo)
     WHERE u.ownership_percentage > 25
-    RETURN c, collect(a) as administrators, collect(u) as ubos
+    RETURN c, collect(DISTINCT a) as administrators, collect(DISTINCT u) as ubos
     """
+    
     result = graph.run(query).data()  # Esecuzione della query e recupero dei dati
     return result
 
@@ -82,7 +88,7 @@ def query4(graph):
     WHERE u.ownership_percentage > 25
     OPTIONAL MATCH (c)-[:COMPANY_HAS_TRANSACTION]->(t:Transactions)
     WHERE t.date >= date('{start_date}') AND t.date <= date('{end_date}')
-    RETURN c, collect(a) as administrators, collect(u) as ubos, sum(t.amount) as total_amount
+    RETURN c, collect(DISTINCT a) as administrators, collect(DISTINCT u) as ubos, sum(t.amount) as total_amount
     """
     result = graph.run(query).data()  # Esecuzione della query e recupero dei dati
     return result
