@@ -121,6 +121,7 @@ def query_companies_with_failed_kyc_aml():
         }
     ])
 
+<<<<<<< Updated upstream
 # Query 4: Analyze Financial Performance of Companies with High UBO Ownership
 def query_financial_analysis_for_high_ownership_ubos():
     return companies_collection.aggregate([
@@ -173,6 +174,110 @@ def query_financial_analysis_for_high_ownership_ubos():
             '$sort': {'total_revenue': -1}
         }
     ])
+=======
+    tempi_di_risposta_prima_esecuzione = {}
+    tempi_di_risposta_media = {}
+
+    for percentuale in percentuali:
+        print(f"\nAnalisi per la percentuale: {percentuale}\n")
+
+        # Query 1
+        start_time = time.time()
+        company_name, query = query1(db, percentuale)
+        if query:
+            query_json = convert_string_fields_to_json(query)
+            json_result = json.dumps(query_json, indent=4, default=json_serializer)
+            print(f"Nome dell'azienda con il nome specificato: \n{json_result}\n")
+        else:
+            json_result = json.dumps({"error": "No results found"})
+            print(f"Nessuna azienda trovata con il nome specificato: {company_name}\n")
+
+        end_time = time.time()
+        tempo_prima_esecuzione = round((end_time - start_time) * 1000, 2)
+        print(f"Tempo di risposta (prima esecuzione - Query 1): {tempo_prima_esecuzione} ms")
+        tempi_di_risposta_prima_esecuzione[f"{percentuale} - Query 1"] = tempo_prima_esecuzione
+
+        tempo_medio_successive, mean, margin_of_error = measure_query_performance(db, 1, percentuale)
+        print(f"Tempo medio di 30 esecuzioni successive (Query 1): {tempo_medio_successive} ms")
+        print(f"Intervallo di Confidenza (Query 1): [{round(mean - margin_of_error, 2)}, {round(mean + margin_of_error, 2)}] ms\n")
+        tempi_di_risposta_media[f"{percentuale} - Query 1"] = (tempo_medio_successive, mean, margin_of_error)
+
+        # Query 2: Recupera dettagli di un'azienda e i dettagli dei suoi amministratori
+        start_time = time.time()
+        company_id, company, administrators = query2(db, percentuale)
+        if company:
+            company_json = json.dumps(company, indent=4, default=json_serializer)
+            #administrators_json = json.dumps(administrators, indent=4, default=json_serializer)
+            print(f"Dettagli dell'azienda con ID {company_id} e degli amministratori: \n{company_json}\n")
+            #print(f"Dettagli Amministratori dell'azienda con ID {company_id} specificato: \n{administrators_json}\n")
+        else:
+            print(f"Nessuna azienda trovata con ID {company_id}\n")
+
+        end_time = time.time()
+        tempo_prima_esecuzione = round((end_time - start_time) * 1000, 2)
+        print(f"Tempo di risposta (prima esecuzione - Query 2): {tempo_prima_esecuzione} ms")
+        tempi_di_risposta_prima_esecuzione[f"{percentuale} - Query 2"] = tempo_prima_esecuzione
+
+        tempo_medio_successive, mean, margin_of_error = measure_query_performance(db, 2, percentuale)
+        print(f"Tempo medio di 30 esecuzioni successive (Query 2): {tempo_medio_successive} ms")
+        print(f"Intervallo di Confidenza (Query 2): [{round(mean - margin_of_error, 2)}, {round(mean + margin_of_error, 2)}] ms\n")
+        tempi_di_risposta_media[f"{percentuale} - Query 2"] = (tempo_medio_successive, mean, margin_of_error)
+
+        # Query 3: Recupera dettagli di un'azienda, i suoi amministratori e UBO con più del 25%
+        start_time = time.time()
+        company_id, company, administrators, ubos = query3(db, percentuale)
+        if company:
+            company_json = json.dumps(company, indent=4, default=json_serializer)
+            print(f"Dettagli dell'azienda con ID {company_id}, amministratori e UBO: \n{company_json}\n")
+        else:
+            print(f"Nessuna azienda trovata con ID {company_id}\n")
+        end_time = time.time()
+        tempo_prima_esecuzione = round((end_time - start_time) * 1000, 2)
+        tempi_di_risposta_prima_esecuzione[f"{percentuale} - Query 3"] = tempo_prima_esecuzione
+
+        tempo_medio_successive, mean, margin_of_error = measure_query_performance(db, 3, percentuale)
+        print(f"Tempo medio di 30 esecuzioni successive (Query 3): {tempo_medio_successive} ms")
+        print(f"Intervallo di Confidenza (Query 3): [{round(mean - margin_of_error, 2)}, {round(mean + margin_of_error, 2)}] ms\n")
+        tempi_di_risposta_media[f"{percentuale} - Query 3"] = (tempo_medio_successive, mean, margin_of_error)
+
+        # Query 4: Recupera dettagli di un'azienda, i suoi amministratori, UBO con più del 25% e la somma delle transazioni in un certo periodo
+        start_time = time.time()
+        company_id, company, administrators_details, ubos_details, total_amount = query4(db, percentuale)
+        if company:
+            company_json = json.dumps(company, indent=4, default=json_serializer)
+            print(f"Dettagli dell'azienda con ID {company_id}, amministratori e UBO e transazioni: \n{company_json}\n")
+        else:
+            print(f"Nessuna azienda trovata con ID {company_id}\n")
+        end_time = time.time()
+        tempo_prima_esecuzione = round((end_time - start_time) * 1000, 2)
+        tempi_di_risposta_prima_esecuzione[f"{percentuale} - Query 4"] = tempo_prima_esecuzione
+
+        tempo_medio_successive, mean, margin_of_error = measure_query_performance(db, 4, percentuale)
+        print(f"Tempo medio di 30 esecuzioni successive (Query 4): {tempo_medio_successive} ms")
+        print(f"Intervallo di Confidenza (Query 4): [{round(mean - margin_of_error, 2)}, {round(mean + margin_of_error, 2)}] ms\n")
+        tempi_di_risposta_media[f"{percentuale} - Query 4"] = (tempo_medio_successive, mean, margin_of_error)
+
+        print("-" * 70)  # Separatore tra le diverse percentuali
+
+    # Scrivo i tempi di risposta medi della prima esecuzione in un file CSV
+    with open('MongoDB/ResponseTimes/mongodb_times_of_response_first_execution.csv', mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['Dataset', 'Query', 'Millisecondi'])
+        for query, tempo_prima_esecuzione in tempi_di_risposta_prima_esecuzione.items():
+            dataset, query = query.split(' - ')
+            writer.writerow([dataset, query, tempo_prima_esecuzione])
+
+    with open('MongoDB/ResponseTimes/mongodb_response_times_average_30.csv', mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['Dataset', 'Query', 'Millisecondi', 'Media', 'Intervallo di Confidenza (Min, Max)'])
+        for query, (tempo_medio_successive, mean_value, margin_of_error) in tempi_di_risposta_media.items():
+            dataset, query_name = query.split(' - ')
+            min_interval = round(mean_value - margin_of_error, 2)
+            max_interval = round(mean_value + margin_of_error, 2)
+            intervallo_di_confidenza = f"({min_interval}, {max_interval})"  # Corretto formato
+            writer.writerow([dataset, query_name, tempo_medio_successive, round(mean_value, 2), intervallo_di_confidenza])
+        print("I tempi di risposta medi sono stati scritti nei file 'tempi_di_risposta_prima_esecuzione.csv' e 'tempi_di_risposta_media_30.csv'.")
+>>>>>>> Stashed changes
 
 # Execute queries and print results
 if __name__ == "__main__":

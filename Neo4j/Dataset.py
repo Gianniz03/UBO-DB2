@@ -10,31 +10,31 @@ def create_graph(graph, admins, shareholders, ubos, transactions, companies, kyc
     # Creazione dei nodi per ogni tipo di entità
     admin_nodes = {}
     for _, row in admins.iterrows():
-        admin_node = Node("Amministratore", id=row['id'], name=row['name'], address=row['address'], birthdate=row['birthdate'], nationality=row['nationality'])
+        admin_node = Node("Administrators", id=row['id'], name=row['name'], address=row['address'], birthdate=row['birthdate'], nationality=row['nationality'])
         graph.create(admin_node)
         admin_nodes[row['id']] = admin_node
 
     shareholder_nodes = {}
     for _, row in shareholders.iterrows():
-        shareholder_node = Node("Azionista", id=row['id'], name=row['name'], type=row['type'], ownership_percentage=row['ownership_percentage'], address=row['address'], date_of_birth=row['date_of_birth'], nationality=row['nationality'])
+        shareholder_node = Node("Shareholders", id=row['id'], name=row['name'], type=row['type'], ownership_percentage=row['ownership_percentage'], address=row['address'], date_of_birth=row['date_of_birth'], nationality=row['nationality'])
         graph.create(shareholder_node)
         shareholder_nodes[row['id']] = shareholder_node
 
     ubo_nodes = {}
     for _, row in ubos.iterrows():
-        ubo_node = Node("UBO", id=row['id'], name=row['name'], address=row['address'], birthdate=row['birthdate'], nationality=row['nationality'], ownership_percentage=row['ownership_percentage'], type=row['type'])
+        ubo_node = Node("Ubo", id=row['id'], name=row['name'], address=row['address'], birthdate=row['birthdate'], nationality=row['nationality'], ownership_percentage=row['ownership_percentage'], type=row['type'])
         graph.create(ubo_node)
         ubo_nodes[row['id']] = ubo_node
 
     transaction_nodes = {}
     for _, row in transactions.iterrows():
-        transaction_node = Node("Transazione", id=row['id'], type=row['type'], amount=row['amount'], date=row['date'], currency=row['currency'])
+        transaction_node = Node("Transactions", id=row['id'], type=row['type'], amount=row['amount'], date=row['date'], currency=row['currency'])
         graph.create(transaction_node)
         transaction_nodes[row['id']] = transaction_node
 
     # Creazione dei nodi per le aziende e delle relazioni
     for _, row in companies.iterrows():
-        company_node = Node("Azienda", id=row['id'], name=row['name'], address=row['address'], legal_form=row['legal_form'], registration_details=row['registration_details'], financial_data=row['financial_data'])
+        company_node = Node("Companies", id=row['id'], name=row['name'], address=row['address'], legal_form=row['legal_form'], registration_details=row['registration_details'], financial_data=row['financial_data'])
         graph.create(company_node)
 
         # Relazione con Amministratori

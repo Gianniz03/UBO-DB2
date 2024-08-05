@@ -1,0 +1,17 @@
+Dataset,Query,Millisecondi
+100%,Query 1,9.54
+100%,Query 2,7.54
+100%,Query 3,14.79
+100%,Query 4,16.06
+75%,Query 1,7.53
+75%,Query 2,8.12
+75%,Query 3,16.05
+75%,Query 4,10.53
+50%,Query 1,7.1
+50%,Query 2,9.12
+50%,Query 3,8.51
+50%,Query 4,9.55
+25%,Query 1,5.1
+25%,Query 2,3.52
+25%,Query 3,2.02
+25%,Query 4,3.0
