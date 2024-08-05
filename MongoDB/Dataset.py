@@ -15,7 +15,6 @@ NUM_SHAREHOLDERS = 100
 legal_forms = ['S.r.l.', 'S.p.A.', 'S.a.S.', 'S.n.C.', 'S.r.l. a socio unico', 'Cooperative', 'Onlus']
 currencies = ['EUR', 'USD', 'GBP', 'JPY', 'AUD']
 
-# Generate administrators
 administrators = []
 for administrator_id in range(1, NUM_ADMINISTRATORS + 1):
     name = fake.name()
@@ -36,9 +35,8 @@ with open('Dataset/administrators.csv', 'w', newline='') as csvfile:
     writer.writeheader()
     writer.writerows(administrators)
 
-print("File CSV 'administrators.csv' creato con successo.")
+print("CSV file 'administrators.csv' successfully created.")
 
-# Generate shareholders
 shareholders = []
 for shareholder_id in range(1, NUM_SHAREHOLDERS + 1):
     name = fake.name()
@@ -64,9 +62,8 @@ with open('Dataset/shareholders.csv', 'w', newline='') as csvfile:
     writer.writeheader()
     writer.writerows(shareholders)
 
-print("File CSV 'shareholders.csv' creato con successo.")
+print("CSV file 'shareholders.csv' successfully created.")
 
-# Generate UBOs
 ubos = []
 for ubo_id in range(1, NUM_UBO + 1):
     name = fake.name()
@@ -92,9 +89,8 @@ with open('Dataset/ubo.csv', 'w', newline='') as csvfile:
     writer.writeheader()
     writer.writerows(ubos)
 
-print("File CSV 'ubo.csv' creato con successo.")
+print("CSV file 'ubo.csv' successfully created.")
 
-# Generate transactions
 transactions = []
 for transaction_id in range(1, NUM_TRANSACTIONS + 1):
     transaction_type = random.choice(['Purchase', 'Sale', 'Payment', 'Refund'])
@@ -116,9 +112,8 @@ with open('Dataset/transactions.csv', 'w', newline='') as csvfile:
     writer.writeheader()
     writer.writerows(transactions)
 
-print("File CSV 'transactions.csv' creato con successo.")
+print("CSV file 'transactions.csv' successfully created.")
 
-# Generate KYC/AML checks
 kyc_aml_checks = []
 for kyc_aml_id in range(1, NUM_KYC_AML_CHECKS + 1):
     ubo_id = random.randint(1, NUM_UBO)
@@ -142,9 +137,8 @@ with open('Dataset/kyc_aml_checks.csv', 'w', newline='') as csvfile:
     writer.writeheader()
     writer.writerows(kyc_aml_checks)
 
-print("File CSV 'kyc_aml_checks.csv' creato con successo.")
+print("CSV file 'kyc_aml_checks.csv' successfully created.")
 
-# Generate companies with integrated relationships
 companies = []
 for company_id in range(1, NUM_COMPANIES + 1):
     name = fake.company()
@@ -177,7 +171,7 @@ for company_id in range(1, NUM_COMPANIES + 1):
         'address': address,
         'legal_form': legal_form,
         'registration_details': registration_details,
-        'financial_data': json.dumps(financial_data),  # Serializza come JSON
+        'financial_data': json.dumps(financial_data),
         'administrators': administrators_ids,
         'shareholders': shareholders_ids,
         'ubo': ubos_ids,
@@ -191,4 +185,4 @@ with open('Dataset/companies.csv', 'w', newline='') as csvfile:
     writer.writeheader()
     writer.writerows(companies)
 
-print("File CSV 'companies.csv' creato con successo.")
+print("CSV file 'companies.csv' successfully created.")
