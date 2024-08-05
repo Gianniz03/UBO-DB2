@@ -28,8 +28,8 @@ dataset_sizes = ['100%', '75%', '50%', '25%']
 queries = ['Query 1', 'Query 2', 'Query 3', 'Query 4']
 
 # Definisce i colori per i grafici
-color_mongo = 'coral'
-color_neo4j = 'purple'
+color_mongo = '#00ED64' # Green
+color_neo4j = '#014063' # Blue
 
 # Funzione per estrarre i valori di intervallo di confidenza dai dati
 def extract_confidence_values(confidence_interval_str):

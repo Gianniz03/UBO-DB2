@@ -60,7 +60,7 @@ def measure_query_performance(db, query_number, percentage, iterations=30):
 
 # Query 1: Recupera un'azienda specifica in base al nome
 def query1(db, percentage):
-    company_name = 'Sutton-Nolan'
+    company_name = 'Lynch, Kemp and Mcdowell'
     companies = f'Companies {percentage}'  # Nome della collezione per il dataset
     query = db[companies].find_one({"name": company_name})  # Esegui la query
 
@@ -68,7 +68,7 @@ def query1(db, percentage):
 
 # Query 2: Recupera i dettagli di un'azienda e dei suoi amministratori
 def query2(db, percentage):
-    company_id = 200
+    company_id = 5094
     companies = f'Companies {percentage}'
     administrators = f'Administrators {percentage}'
     company = db[companies].find_one({"id": company_id})
@@ -112,7 +112,7 @@ def query3(db, percentage):
     companies_collection = f'Companies {percentage}'
     administrators_collection = f'Administrators {percentage}'
     ubos_collection = f'UBO {percentage}'
-    company_id = 4550  # Modifica questo ID in base ai tuoi dati
+    company_id = 5094  # Modifica questo ID in base ai tuoi dati
 
     company = db[companies_collection].find_one({"id": company_id})
 
@@ -142,7 +142,7 @@ def query4(db, percentage):
     ubos_collection = f'UBO {percentage}'
     transactions_collection = f'Transactions {percentage}'
     
-    company_id = 1  # Modifica questo ID in base ai tuoi dati
+    company_id = 5094  # Modifica questo ID in base ai tuoi dati
 
     # Recupera l'azienda
     company = db[companies_collection].find_one({"id": company_id})
@@ -167,7 +167,8 @@ def query4(db, percentage):
     
     transaction_summary = list(db[transactions_collection].aggregate([
         {"$match": {"id": {"$in": transaction_ids}, "date": {"$gte": start_date, "$lte": end_date}}},
-        {"$group": {"_id": None, "total_amount": {"$sum": "$amount"}}}
+        {"$group": {"_id": None, "total_amount": {"$sum": "$amount"}}},
+        {"$project": {"_id": 0, "total_amount": 1}}
     ]))
 
     """ transaction_summary = db[transactions_collection].aggregate([
