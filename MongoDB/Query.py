@@ -204,6 +204,7 @@ def main():
         # Query 1: Recupera il nome dell'azienda con il nome specificato
         start_time = time.time()
         company_name, query = query1(db, percentage)
+        end_time = time.time()
         if query:
             query_json = convert_string_fields_to_json(query)
             json_result = json.dumps(query_json, indent=4, default=json_serializer)
@@ -212,7 +213,6 @@ def main():
             json_result = json.dumps({"error": "No results found"})
             print(f"No companies found with the specified name: {company_name}\n")
 
-        end_time = time.time()
         first_execution_time = round((end_time - start_time) * 1000, 2)
         print(f"Response time (first run - Query 1): {first_execution_time} ms")
         first_execution_response_times[f"{percentage} - Query 1"] = first_execution_time
@@ -225,6 +225,7 @@ def main():
         # Query 2: Recupera i dettagli dell'azienda e dei suoi amministratori
         start_time = time.time()
         company_id, company, administrators = query2(db, percentage)
+        end_time = time.time()
         if company:
             company_json = json.dumps(company, indent=4, default=json_serializer)
             # administrators_json = json.dumps(administrators, indent=4, default=json_serializer)
@@ -233,7 +234,6 @@ def main():
         else:
             print(f"No companies found with ID {company_id}\n")
 
-        end_time = time.time()
         first_execution_time = round((end_time - start_time) * 1000, 2)
         print(f"Response Time (First Run - Query 2): {first_execution_time} ms")
         first_execution_response_times[f"{percentage} - Query 2"] = first_execution_time
@@ -246,12 +246,13 @@ def main():
         # Query 3: Recupera i dettagli dell'azienda, dei suoi amministratori e degli UBO con più del 25%
         start_time = time.time()
         company_id, company, administrators, ubos = query3(db, percentage)
+        end_time = time.time()
         if company:
             company_json = json.dumps(company, indent=4, default=json_serializer)
             print(f"Company details with ID {company_id}, administrators and UBO: \n{company_json}\n")
         else:
             print(f"No companies found with ID {company_id}\n")
-        end_time = time.time()
+
         first_execution_time = round((end_time - start_time) * 1000, 2)
         first_execution_response_times[f"{percentage} - Query 3"] = first_execution_time
 
@@ -263,12 +264,13 @@ def main():
         # Query 4: Recupera i dettagli dell'azienda, dei suoi amministratori, UBO e la somma delle transazioni in un periodo
         start_time = time.time()
         company_id, company, administrators_details, ubos_details, total_amount = query4(db, percentage)
+        end_time = time.time()
         if company:
             company_json = json.dumps(company, indent=4, default=json_serializer)
             print(f"Company details with ID {company_id}, administrators, UBO and transactions: \n{company_json}\n")
         else:
             print(f"No companies found with ID {company_id}\n")
-        end_time = time.time()
+
         first_execution_time = round((end_time - start_time) * 1000, 2)
         first_execution_response_times[f"{percentage} - Query 4"] = first_execution_time
 

@@ -34,7 +34,7 @@ for administrator_id in range(1, NUM_ADMINISTRATORS + 1):
     })
 
 # Scrivi i dati degli amministratori in un file CSV
-with open('Dataset/administrators.csv', 'w', newline='') as csvfile:
+with open('Dataset/File/administrators.csv', 'w', newline='') as csvfile:
     fieldnames = ['id', 'name', 'address', 'birthdate', 'nationality']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
@@ -63,7 +63,7 @@ for shareholder_id in range(1, NUM_SHAREHOLDERS + 1):
     })
 
 # Scrivi i dati degli azionisti in un file CSV
-with open('Dataset/shareholders.csv', 'w', newline='') as csvfile:
+with open('Dataset/File/shareholders.csv', 'w', newline='') as csvfile:
     fieldnames = ['id', 'name', 'type', 'ownership_percentage', 'address', 'date_of_birth', 'nationality']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
@@ -92,7 +92,7 @@ for ubo_id in range(1, NUM_UBO + 1):
     })
 
 # Scrivi i dati degli UBO in un file CSV
-with open('Dataset/ubo.csv', 'w', newline='') as csvfile:
+with open('Dataset/File/ubo.csv', 'w', newline='') as csvfile:
     fieldnames = ['id', 'name', 'address', 'birthdate', 'nationality', 'ownership_percentage', 'type']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
@@ -117,7 +117,7 @@ for transaction_id in range(1, NUM_TRANSACTIONS + 1):
     })
 
 # Scrivi i dati delle transazioni in un file CSV
-with open('Dataset/transactions.csv', 'w', newline='') as csvfile:
+with open('Dataset/File/transactions.csv', 'w', newline='') as csvfile:
     fieldnames = ['id', 'type', 'amount', 'date', 'currency']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
@@ -144,7 +144,7 @@ for kyc_aml_id in range(1, NUM_KYC_AML_CHECKS + 1):
     })
 
 # Scrivi i dati dei controlli KYC/AML in un file CSV
-with open('Dataset/kyc_aml_checks.csv', 'w', newline='') as csvfile:
+with open('Dataset/File/kyc_aml_checks.csv', 'w', newline='') as csvfile:
     fieldnames = ['id', 'ubo_id', 'type', 'result', 'date', 'notes']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
@@ -194,7 +194,7 @@ for company_id in range(1, NUM_COMPANIES + 1):
     })
 
 # Scrivi i dati delle aziende in un file CSV
-with open('Dataset/companies.csv', 'w', newline='') as csvfile:
+with open('Dataset/File/companies.csv', 'w', newline='') as csvfile:
     fieldnames = ['id', 'name', 'address', 'legal_form', 'registration_details', 'financial_data', 'administrators', 'shareholders', 'ubo', 'transactions', 'kyc_aml_checks']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
