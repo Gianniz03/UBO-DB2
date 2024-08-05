@@ -1,180 +1,185 @@
+import json
+from bson import ObjectId
 from pymongo import MongoClient
+import time
+import csv
+import scipy.stats as stats
+import numpy as np
 
-# Connect to MongoDB
-client = MongoClient('mongodb://localhost:27017/')  # Use your MongoDB URI if hosted remotely
-db = client['UBO']  # Replace with your database name
+def json_serializer(obj):
+    if isinstance(obj, ObjectId):
+        return str(obj)
+    raise TypeError("Type not serializable")
 
-# Collections
-administrators_collection = db['Administrators 100%']
-shareholders_collection = db['Shareholders 100%']
-ubo_collection = db['UBO 100%']
-transactions_collection = db['Transactions 100%']
-kyc_aml_checks_collection = db['KYC_AML_Checks 100%']
-companies_collection = db['Companies 100%']
+def convert_string_fields_to_json(doc):
+    if isinstance(doc, dict):
+        for key, value in doc.items():
+            if isinstance(value, str):
+                try:
+                    # Prova a convertire la stringa in un oggetto JSON
+                    doc[key] = json.loads(value)
+                except json.JSONDecodeError:
+                    # Se non è una stringa JSON valida, mantieni il valore originale
+                    pass
+    return doc
 
-# Query 1: Retrieve Basic Details of a Specific Company
-def query_company_basic_details(company_id):
-    return companies_collection.aggregate([
-        # Match the specific company
-        {
-            '$match': {
-                'id': company_id
-            }
-        },
-        # Join with administrators
-        {
-            '$lookup': {
-                'from': 'Administrators 100%',
-                'localField': 'administrators',
-                'foreignField': 'id',
-                'as': 'administrator_details'
-            }
-        },
-        # Project the necessary fields
-        {
-            '$project': {
-                'name': 1,
-                'address': 1,
-                'legal_form': 1,
-                'administrator_details': 1
-            }
-        }
+def calculate_confidence_interval(data, confidence=0.95):
+    n = len(data)
+    mean_value = np.mean(data)
+    stderr = stats.sem(data)
+    margin_of_error = stderr * stats.t.ppf((1 + confidence) / 2, n - 1)
+    return mean_value, margin_of_error
+
+def measure_query_performance(db, query_number, percentuale, iterations=30):
+    tempi_successivi = []
+    
+    for _ in range(iterations):
+        start_time = time.time()
+        if query_number == 1:
+            query1(db, percentuale)
+        elif query_number == 2:
+            query2(db, percentuale)
+        elif query_number == 3:
+            query3(db, percentuale)
+        elif query_number == 4:
+            query4(db, percentuale)
+        end_time = time.time()
+        tempo_esecuzione = (end_time - start_time) * 1000  # Millisecondi
+        tempi_successivi.append(tempo_esecuzione)
+    
+    mean, margin_of_error = calculate_confidence_interval(tempi_successivi)
+    tempo_medio_successive = round(sum(tempi_successivi) / len(tempi_successivi), 2)
+    
+    return tempo_medio_successive, mean, margin_of_error
+
+def query1(db, percentuale):
+    company_name = 'Sutton-Nolan'
+    companies = f'Companies {percentuale}'  # Modifica con il nome corretto della collezione
+    query = db[companies].find_one({"name": company_name})  # Modifica con la query corretta
+
+    return company_name, query
+
+def query2(db, percentuale):
+    company_id = 200
+    companies = f'Companies {percentuale}'
+    administrators = f'Administrators {percentuale}'
+    company = db[companies].find_one({"id": company_id})
+    
+    if not company:
+        return company_id, False, []
+
+    company = convert_string_fields_to_json(company)
+    
+    # Recupera dettagli degli amministratori
+    admin_ids = company.get('administrators', [])
+    administrators_details = list(db[administrators].find({"id": {"$in": admin_ids}}))
+
+    # Aggiungi i dettagli all'azienda
+    company['administrators_details'] = administrators_details
+
+    return company_id, company, administrators_details
+
+# Versione Alternativa
+""" def query2(db, percentuale):
+    company_id = 4
+    companies = f'Companies {percentuale}'
+    administrators = f'Administrators {percentuale}'
+    company = db[companies].find_one({"id": company_id})
+    
+    if company:
+        company = convert_string_fields_to_json(company)
+        if 'administrators' in company and isinstance(company['administrators'], list):
+            administrators = list(db[administrators].find({"id": {"$in": company['administrators']}}))
+            company['administrators_details'] = administrators
+        else:
+            administrators = []
+            company['administrators_details'] = []
+    else:
+        return company_id, False, []
+
+    return company_id, company, administrators """
+
+def query3(db, percentuale):
+    companies_collection = f'Companies {percentuale}'
+    administrators_collection = f'Administrators {percentuale}'
+    ubos_collection = f'UBO {percentuale}'
+    company_id = 4550  # Cambia questo ID in base ai tuoi dati reali
+
+    company = db[companies_collection].find_one({"id": company_id})
+
+    if not company:
+        return company_id, False, [], []
+
+    company = convert_string_fields_to_json(company)
+    
+    # Recupera dettagli degli amministratori
+    admin_ids = company.get('administrators', [])
+    administrators_details = list(db[administrators_collection].find({"id": {"$in": admin_ids}}))
+
+    # Recupera dettagli degli UBO
+    ubo_ids = company.get('ubo', [])
+    ubos_details = list(db[ubos_collection].find({"id": {"$in": ubo_ids}, "ownership_percentage": {"$gt": 25}}))
+
+    # Aggiungi i dettagli all'azienda
+    company['administrators_details'] = administrators_details
+    company['ubo_details'] = ubos_details
+
+    return company_id, company, administrators_details, ubos_details
+
+from datetime import datetime
+
+def query4(db, percentuale):
+    companies_collection = f'Companies {percentuale}'
+    administrators_collection = f'Administrators {percentuale}'
+    ubos_collection = f'UBO {percentuale}'
+    transactions_collection = f'Transactions {percentuale}'
+    
+    company_id = 1  # Cambia questo ID in base ai tuoi dati reali
+
+    # Recupera l'azienda
+    company = db[companies_collection].find_one({"id": company_id})
+    
+    if not company:
+        return company_id, False, [], [], 0
+    
+    company = convert_string_fields_to_json(company)
+    
+    # Recupera dettagli degli amministratori
+    admin_ids = company.get('administrators', [])
+    administrators_details = list(db[administrators_collection].find({"id": {"$in": admin_ids}}))
+
+    # Recupera dettagli degli UBO
+    ubo_ids = company.get('ubo', [])
+    ubos_details = list(db[ubos_collection].find({"id": {"$in": ubo_ids}, "ownership_percentage": {"$gt": 25}}))
+
+    # Recupera la somma delle transazioni
+    transaction_ids = company.get('transactions', [])
+    start_date = datetime(2022, 1, 1)
+    end_date = datetime(2022, 12, 31)
+    
+    transaction_summary = db[transactions_collection].aggregate([
+        {"$match": {"id": {"$in": transaction_ids}, "date": {"$gte": start_date, "$lte": end_date}}},
+        {"$group": {"_id": None, "total_amount": {"$sum": "$amount"}}}
     ])
 
-# Query 2: Retrieve Transactions for a Specific Company
-def query_company_transactions(company_id):
-    return companies_collection.aggregate([
-        # Match the specific company
-        {
-            '$match': {
-                'id': company_id
-            }
-        },
-        # Join with transactions
-        {
-            '$lookup': {
-                'from': 'Transactions 100%',
-                'localField': 'transactions',
-                'foreignField': 'id',
-                'as': 'transaction_details'
-            }
-        },
-        # Unwind the transaction details
-        {
-            '$unwind': '$transaction_details'
-        },
-        # Project the necessary fields
-        {
-            '$project': {
-                'name': 1,
-                'transaction_details.type': 1,
-                'transaction_details.amount': 1,
-                'transaction_details.date': 1
-            }
-        }
-    ])
+    # Estrai il totale delle transazioni
+    total_amount = 0
+    for record in transaction_summary:
+        total_amount = record.get('total_amount', 0)
+    
+    # Aggiungi i dettagli all'azienda
+    company['administrators_details'] = administrators_details
+    company['ubo_details'] = ubos_details
+    company['transactions_summary'] = total_amount
+    
+    return company_id, company, administrators_details, ubos_details, total_amount
 
-# Query 3: Find Companies with UBOs and Failed KYC/AML Checks
-def query_companies_with_failed_kyc_aml():
-    return companies_collection.aggregate([
-        # Join with UBOs
-        {
-            '$lookup': {
-                'from': 'UBO 100%',
-                'localField': 'ubo',
-                'foreignField': 'id',
-                'as': 'ubo_details'
-            }
-        },
-        # Unwind the UBO details
-        {
-            '$unwind': '$ubo_details'
-        },
-        # Join with KYC/AML checks
-        {
-            '$lookup': {
-                'from': 'KYC_AML_Checks 100%',
-                'localField': 'ubo_details.id',
-                'foreignField': 'ubo_id',
-                'as': 'kyc_aml_check_details'
-            }
-        },
-        # Unwind the KYC/AML check details
-        {
-            '$unwind': '$kyc_aml_check_details'
-        },
-        # Match failed checks
-        {
-            '$match': {
-                'kyc_aml_check_details.result': 'Failed'
-            }
-        },
-        # Project the necessary fields
-        {
-            '$project': {
-                'name': 1,
-                'ubo_details.name': 1,
-                'ubo_details.ownership_percentage': 1,
-                'kyc_aml_check_details.type': 1,
-                'kyc_aml_check_details.date': 1
-            }
-        }
-    ])
+def main():
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client['UBO']  # Cambia 'DatabaseName' con il tuo nome del database
+    
+    percentuali = ['100%', '75%', '50%', '25%']  # Percentuali dei dataset
 
-<<<<<<< Updated upstream
-# Query 4: Analyze Financial Performance of Companies with High UBO Ownership
-def query_financial_analysis_for_high_ownership_ubos():
-    return companies_collection.aggregate([
-        # Join with UBOs
-        {
-            '$lookup': {
-                'from': 'UBO 100%',
-                'localField': 'ubo',
-                'foreignField': 'id',
-                'as': 'ubo_details'
-            }
-        },
-        # Unwind the UBO details
-        {
-            '$unwind': '$ubo_details'
-        },
-        # Match UBOs with ownership above 25%
-        {
-            '$match': {
-                'ubo_details.ownership_percentage': {'$gt': 25}
-            }
-        },
-        # Join with financial data
-        {
-            '$project': {
-                'name': 1,
-                'ubo_details.name': 1,
-                'ubo_details.ownership_percentage': 1,
-                'financial_data': 1
-            }
-        },
-        # Unwind financial data for further analysis
-        {
-            '$unwind': '$financial_data'
-        },
-        # Aggregate financial data
-        {
-            '$group': {
-                '_id': '$name',
-                'total_revenue': {'$sum': '$financial_data.revenue'},
-                'total_profit': {'$sum': '$financial_data.profit'},
-                'ubos': {'$push': {
-                    'ubo_name': '$ubo_details.name',
-                    'ubo_ownership_percentage': '$ubo_details.ownership_percentage'
-                }}
-            }
-        },
-        # Sort by total revenue descending
-        {
-            '$sort': {'total_revenue': -1}
-        }
-    ])
-=======
     tempi_di_risposta_prima_esecuzione = {}
     tempi_di_risposta_media = {}
 
@@ -277,27 +282,6 @@ def query_financial_analysis_for_high_ownership_ubos():
             intervallo_di_confidenza = f"({min_interval}, {max_interval})"  # Corretto formato
             writer.writerow([dataset, query_name, tempo_medio_successive, round(mean_value, 2), intervallo_di_confidenza])
         print("I tempi di risposta medi sono stati scritti nei file 'tempi_di_risposta_prima_esecuzione.csv' e 'tempi_di_risposta_media_30.csv'.")
->>>>>>> Stashed changes
 
-# Execute queries and print results
 if __name__ == "__main__":
-    company_id = 1  # Replace with the specific company ID you want to analyze
-
-    print("Company Basic Details:")
-    for company in query_company_basic_details(company_id):
-        print(company)
-    
-    print("\nCompany Transactions:")
-    for transaction in query_company_transactions(company_id):
-        print(transaction)
-
-    print("\nCompanies with Failed KYC/AML Checks:")
-    for high_risk_company in query_companies_with_failed_kyc_aml():
-        print(high_risk_company)
-
-    print("\nFinancial Analysis for High UBO Ownership Companies:")
-    for analysis in query_financial_analysis_for_high_ownership_ubos():
-        print(analysis)
-
-# Close the MongoDB connection
-client.close()
+    main()
