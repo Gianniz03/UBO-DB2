@@ -74,12 +74,12 @@ def create_graph(graph, admins, shareholders, ubos, transactions, companies, kyc
             graph.create(rel)
 
 # Carica i dataset dai file CSV
-admins = pd.read_csv('Dataset/administrators.csv', encoding='ISO-8859-1')
-shareholders = pd.read_csv('Dataset/shareholders.csv', encoding='ISO-8859-1')
-ubos = pd.read_csv('Dataset/ubo.csv', encoding='ISO-8859-1')
-transactions = pd.read_csv('Dataset/transactions.csv', encoding='ISO-8859-1')
-companies = pd.read_csv('Dataset/companies.csv', encoding='ISO-8859-1')
-kyc_aml_checks = pd.read_csv('Dataset/kyc_aml_checks.csv', encoding='ISO-8859-1')
+admins = pd.read_csv('Dataset/File/administrators.csv', encoding='ISO-8859-1')
+shareholders = pd.read_csv('Dataset/File/shareholders.csv', encoding='ISO-8859-1')
+ubos = pd.read_csv('Dataset/File/ubo.csv', encoding='ISO-8859-1')
+transactions = pd.read_csv('Dataset/File/transactions.csv', encoding='ISO-8859-1')
+companies = pd.read_csv('Dataset/File/companies.csv', encoding='ISO-8859-1')
+kyc_aml_checks = pd.read_csv('Dataset/File/kyc_aml_checks.csv', encoding='ISO-8859-1')
 
 # Connessione ai database Neo4j
 graph100 = Graph("bolt://localhost:7687", user="neo4j", password="12345678", name="dataset100")
