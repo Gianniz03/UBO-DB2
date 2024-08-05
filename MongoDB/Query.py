@@ -156,31 +156,36 @@ def query4(db, percentage):
     admin_ids = company.get('administrators', [])
     administrators_details = list(db[administrators_collection].find({"id": {"$in": admin_ids}}))
 
-    # Recupera i dettagli degli UBO
+    # Recupera i dettagli degli UBO maggiori di una certa quota
     ubo_ids = company.get('ubo', [])
     ubos_details = list(db[ubos_collection].find({"id": {"$in": ubo_ids}, "ownership_percentage": {"$gt": 25}}))
 
     # Recupera la somma delle transazioni in un periodo specifico
     transaction_ids = company.get('transactions', [])
-    start_date = datetime(2022, 1, 1)
-    end_date = datetime(2022, 12, 31)
+    start_date = datetime(2021, 1, 1)
+    end_date = datetime(2024, 12, 31)
     
-    transaction_summary = db[transactions_collection].aggregate([
+    transaction_summary = list(db[transactions_collection].aggregate([
         {"$match": {"id": {"$in": transaction_ids}, "date": {"$gte": start_date, "$lte": end_date}}},
         {"$group": {"_id": None, "total_amount": {"$sum": "$amount"}}}
-    ])
+    ]))
 
-    # Estrai il totale delle transazioni
+    """ transaction_summary = db[transactions_collection].aggregate([
+        {"$match": {"id": {"$in": transaction_ids}, "date": {"$gte": start_date, "$lte": end_date}}},
+        {"$group": {"_id": None, "total_amount": {"$sum": "$amount"}}}
+    ]) """
+
+    """ # Estrai il totale delle transazioni ESEMPIO E TEST
     total_amount = 0
     for record in transaction_summary:
-        total_amount = record.get('total_amount', 0)
+        total_amount = record.get('total_amount', 0) """
     
     # Aggiungi i dettagli degli amministratori, degli UBO e delle transazioni all'azienda
     company['administrators_details'] = administrators_details
     company['ubo_details'] = ubos_details
-    company['transactions_summary'] = total_amount
+    company['transactions_summary'] = transaction_summary
     
-    return company_id, company, administrators_details, ubos_details, total_amount
+    return company_id, company, administrators_details, ubos_details, transaction_summary
 
 # Funzione principale per eseguire le query e misurare le performance
 def main():
