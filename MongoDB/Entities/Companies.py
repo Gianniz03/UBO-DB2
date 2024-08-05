@@ -15,7 +15,7 @@ collection_name_50 = 'Companies 50%'
 collection_name_25 = 'Companies 25%'
 
 # Specifica il percorso del file CSV da leggere
-csv_filename = 'Dataset/companies.csv'
+csv_filename = 'Dataset/File/companies.csv'
 
 # Leggi il file CSV in un DataFrame di pandas, utilizzando la codifica 'ISO-8859-1'
 df = pd.read_csv(csv_filename, encoding='ISO-8859-1')

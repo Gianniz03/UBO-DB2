@@ -13,7 +13,7 @@ collection_name_50 = 'Shareholders 50%'
 collection_name_25 = 'Shareholders 25%'
 
 # Nome del file CSV da cui leggere i dati
-csv_filename = 'Dataset/shareholders.csv'
+csv_filename = 'Dataset/File/shareholders.csv'
 
 # Leggi il file CSV in un DataFrame pandas
 df = pd.read_csv(csv_filename, encoding='ISO-8859-1')

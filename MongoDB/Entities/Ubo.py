@@ -13,7 +13,7 @@ collection_name_50 = 'UBO 50%'
 collection_name_25 = 'UBO 25%'
 
 # Nome del file CSV da cui leggere i dati
-csv_filename = 'Dataset/ubo.csv'
+csv_filename = 'Dataset/File/ubo.csv'
 
 # Leggi il file CSV in un DataFrame pandas
 df = pd.read_csv(csv_filename, encoding='ISO-8859-1')

@@ -15,7 +15,7 @@ collection_name_50 = 'KYC_AML_Checks 50%'
 collection_name_25 = 'KYC_AML_Checks 25%'
 
 # Specifica il percorso del file CSV da leggere
-csv_filename = 'Dataset/kyc_aml_checks.csv'
+csv_filename = 'Dataset/File/kyc_aml_checks.csv'
 
 # Leggi il file CSV in un DataFrame di pandas, utilizzando la codifica 'ISO-8859-1'
 df = pd.read_csv(csv_filename, encoding='ISO-8859-1')
