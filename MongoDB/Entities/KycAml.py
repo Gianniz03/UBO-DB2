@@ -55,7 +55,7 @@ special_document = pd.DataFrame([{
     'ubo_id': 999999999,  # Assicurati che l'ID sia valido e presente nei dati reali
     'type': 'Special Check',
     'result': 'Passed',
-    'date': '2024-01-01',
+    'date': pd.to_datetime('2024-01-01'),
     'notes': 'This is a special KYC/AML check document included in all subsets.'
 }])
 

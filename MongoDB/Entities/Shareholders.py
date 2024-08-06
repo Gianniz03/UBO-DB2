@@ -60,7 +60,7 @@ special_document = pd.DataFrame([{
     'type': 'Person',  # Tipo di azionista
     'ownership_percentage': 100.0,
     'address': '123 Special Lane',
-    'date_of_birth': '1980-01-01',  # Assicurati che la data di nascita sia valida
+    'birthdate': pd.to_datetime('1980-01-01'),  # Assicurati che la data di nascita sia valida
     'nationality': 'Special Country'  # Assicurati che la nazionalità sia valida
 }])
 
