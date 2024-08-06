@@ -18,6 +18,16 @@ csv_filename = 'Dataset/File/shareholders.csv'
 # Leggi il file CSV in un DataFrame pandas
 df = pd.read_csv(csv_filename, encoding='ISO-8859-1')
 
+# Verifica se la colonna 'birthdate' esiste
+if 'birthdate' in df.columns:
+    # Crea una maschera per le righe in cui 'type' è 'Person'
+    mask = df['type'].eq("Person")
+    
+    # Converti 'birthdate' in datetime solo per le righe che soddisfano la maschera
+    # Se mask == 1 converte la data invece se == 0 non converte
+    df.loc[mask, 'birthdate'] = pd.to_datetime(df.loc[mask, 'birthdate'])
+
+
 # Calcola il numero totale di documenti nel DataFrame
 total_documents = df.shape[0]
 

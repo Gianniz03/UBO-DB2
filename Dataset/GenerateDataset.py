@@ -49,7 +49,7 @@ for shareholder_id in range(1, NUM_SHAREHOLDERS + 1):
     shareholder_type = random.choice(['Person', 'Company'])
     ownership_percentage = round(random.uniform(0.1, 100), 2)
     address = fake.address()
-    date_of_birth = fake.date_of_birth(minimum_age=18, maximum_age=90).strftime('%Y-%m-%d') if shareholder_type == 'Person' else ''
+    birthdate = fake.date_of_birth(minimum_age=18, maximum_age=90).strftime('%Y-%m-%d') if shareholder_type == 'Person' else ''
     nationality = fake.country() if shareholder_type == 'Person' else ''
 
     shareholders.append({
@@ -58,13 +58,13 @@ for shareholder_id in range(1, NUM_SHAREHOLDERS + 1):
         'type': shareholder_type,
         'ownership_percentage': ownership_percentage,
         'address': address,
-        'date_of_birth': date_of_birth,
+        'birthdate': birthdate,
         'nationality': nationality
     })
 
 # Scrivi i dati degli azionisti in un file CSV
 with open('Dataset/File/shareholders.csv', 'w', newline='') as csvfile:
-    fieldnames = ['id', 'name', 'type', 'ownership_percentage', 'address', 'date_of_birth', 'nationality']
+    fieldnames = ['id', 'name', 'type', 'ownership_percentage', 'address', 'birthdate', 'nationality']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
     writer.writerows(shareholders)

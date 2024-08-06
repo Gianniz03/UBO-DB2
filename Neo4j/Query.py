@@ -93,6 +93,33 @@ def query4(graph):
     result = graph.run(query).data()  # Esecuzione della query e recupero dei dati
     return result
 
+def query5(graph):
+    company_id = 18
+    currency = "GBP"
+    date = "2019-01-01"
+
+    # Query per recuperare l'azienda e i dettagli associati
+    query = f"""
+    MATCH (c:Companies {{id: {company_id}}})
+    OPTIONAL MATCH (c)-[:COMPANY_HAS_ADMINISTRATOR]->(a:Administrators)
+    OPTIONAL MATCH (c)-[:COMPANY_HAS_UBO]->(u:Ubo)
+    WHERE u.ownership_percentage > 25
+    OPTIONAL MATCH (c)-[:COMPANY_HAS_TRANSACTION]->(t:Transactions)
+    WHERE t.currency = "{currency}" AND t.date >= "{date}"
+    OPTIONAL MATCH (u)-[:UBO_HAS_CHECKS]->(k:KYC_AML_Check)
+    WHERE k.date >= "{date}"
+    RETURN c AS company,
+        collect(DISTINCT a) AS administrators,
+        collect(DISTINCT u) AS ubos,
+        sum(t.amount) AS total_amount,
+        collect(DISTINCT k) AS kyc_aml_checks
+    """
+
+    # Esecuzione della query
+    result = graph.run(query).data()
+
+    return result
+
 def main():
     # Definizione dei grafi da analizzare
     graphs = {
@@ -183,6 +210,25 @@ def main():
         print(f"Average time of 30 subsequent executions (Query 4): {average_subsequent_time} ms")
         print(f"Confidence Interval (Query 4): [{round(average - margin_of_error, 2)}, {round(average + margin_of_error, 2)}] ms\n")
         average_response_times[f"{percentage} - Query 4"] = (average_subsequent_time, average, margin_of_error)
+
+        # Query 5
+        start_time = time.time()
+        query_result = query5(graph)  # Esecuzione della query
+        if query_result:
+            json_result = json.dumps(query_result, indent=5, default=str)  # Conversione in JSON
+            print(f"Query 5 Result: \n{json_result}\n")
+        else:
+            print(f"No company found with the specified ID\n")
+
+        end_time = time.time()
+        time_first_execution = round((end_time - start_time) * 1000, 2)  # Tempo di esecuzione della prima query
+        print(f"Response time (first execution - Query 5): {time_first_execution} ms")
+        response_times_first_execution[f"{percentage} - Query 5"] = time_first_execution
+
+        average_subsequent_time, average, margin_of_error = measure_query_performance(graph, query5, percentage)
+        print(f"Average time of 30 subsequent executions (Query 5): {average_subsequent_time} ms")
+        print(f"Confidence Interval (Query 5): [{round(average - margin_of_error, 2)}, {round(average + margin_of_error, 2)}] ms\n")
+        average_response_times[f"{percentage} - Query 5"] = (average_subsequent_time, average, margin_of_error)
 
     # Salvataggio dei tempi di risposta della prima esecuzione in un file CSV
     with open('Neo4j/ResponseTimes/neo4j_times_of_response_first_execution.csv', mode='w', newline='') as file:

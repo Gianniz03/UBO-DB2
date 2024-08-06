@@ -20,7 +20,7 @@ def create_graph(graph, admins, shareholders, ubos, transactions, companies, kyc
     # Crea nodi per gli azionisti
     shareholder_nodes = {}
     for _, row in shareholders.iterrows():
-        shareholder_node = Node("Shareholders", id=row['id'], name=row['name'], type=row['type'], ownership_percentage=row['ownership_percentage'], address=row['address'], date_of_birth=row['date_of_birth'], nationality=row['nationality'])
+        shareholder_node = Node("Shareholders", id=row['id'], name=row['name'], type=row['type'], ownership_percentage=row['ownership_percentage'], address=row['address'], birthdate=row['birthdate'], nationality=row['nationality'])
         graph.create(shareholder_node)
         shareholder_nodes[row['id']] = shareholder_node
 
