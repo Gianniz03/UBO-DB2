@@ -18,6 +18,10 @@ csv_filename = 'Dataset/File/ubo.csv'
 # Leggi il file CSV in un DataFrame pandas
 df = pd.read_csv(csv_filename, encoding='ISO-8859-1')
 
+# Converti il campo della data in oggetti datetime
+if 'birthdate' in df.columns:
+    df['birthdate'] = pd.to_datetime(df['birthdate'])
+    
 # Calcola il numero totale di documenti nel DataFrame
 total_documents = df.shape[0]
 
