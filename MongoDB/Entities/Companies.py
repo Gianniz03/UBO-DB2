@@ -53,11 +53,11 @@ special_document = pd.DataFrame([{
     'legal_form': 'S.p.A.',
     'registration_details': 'SPECIAL-REG-001',
     'financial_data': '[{"year":2024,"revenue":100000,"profit":50000}]',
-    'administrators': [999999999],  # Assicurati che gli ID siano validi e presenti nei dati reali
-    'shareholders': [999999999],
-    'ubo': [999999999],
-    'transactions': [999999999],
-    'kyc_aml_checks': [999999999]
+    'administrators': '[999999999]',  # Assicurati che gli ID siano validi e presenti nei dati reali
+    'shareholders': '[999999999]',
+    'ubo': '[999999999]',
+    'transactions': '[999999999]',
+    'kyc_aml_checks': '[999999999]'
 }])
 
 # Aggiungi il documento speciale a ciascun DataFrame
