@@ -53,7 +53,7 @@ def query1(graph):
 
 # Definizione della query 2
 def query2(graph):
-    company_id = 5094
+    company_id = 6747
     query = f"""
     MATCH (c:Companies {{id: {company_id}}})
     OPTIONAL MATCH (c)-[:COMPANY_HAS_ADMINISTRATOR]->(a:Administrators)
@@ -64,7 +64,7 @@ def query2(graph):
 
 # Definizione della query 3
 def query3(graph):
-    company_id = 5094
+    company_id = 6747
     query = f"""
     MATCH (c:Companies {{id: {company_id}}})
     OPTIONAL MATCH (c)-[:COMPANY_HAS_ADMINISTRATOR]->(a:Administrators)
@@ -78,16 +78,16 @@ def query3(graph):
 
 # Definizione della query 4
 def query4(graph):
-    company_id = 5094
-    start_date = "2021-01-01"
-    end_date = "2023-12-31"
+    company_id = 6747
+    start_date = "2019-01-01"
+    end_date = "2024-12-31"
     query = f"""
     MATCH (c:Companies {{id: {company_id}}})
     OPTIONAL MATCH (c)-[:COMPANY_HAS_ADMINISTRATOR]->(a:Administrators)
     OPTIONAL MATCH (c)-[:COMPANY_HAS_UBO]->(u:Ubo)
     WHERE u.ownership_percentage > 25
     OPTIONAL MATCH (c)-[:COMPANY_HAS_TRANSACTION]->(t:Transactions)
-    WHERE t.date >= date('{start_date}') AND t.date <= date('{end_date}')
+    WHERE t.date >= '{start_date}' AND t.date <= '{end_date}'
     RETURN c, collect(DISTINCT a) as administrators, collect(DISTINCT u) as ubos, sum(t.amount) as total_amount
     """
     result = graph.run(query).data()  # Esecuzione della query e recupero dei dati

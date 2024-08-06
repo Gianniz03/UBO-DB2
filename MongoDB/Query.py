@@ -68,7 +68,7 @@ def query1(db, percentage):
 
 # Query 2: Recupera i dettagli di un'azienda e dei suoi amministratori
 def query2(db, percentage):
-    company_id = 5094
+    company_id = 6747
     companies = f'Companies {percentage}'
     administrators = f'Administrators {percentage}'
     company = db[companies].find_one({"id": company_id})
@@ -112,7 +112,7 @@ def query3(db, percentage):
     companies_collection = f'Companies {percentage}'
     administrators_collection = f'Administrators {percentage}'
     ubos_collection = f'UBO {percentage}'
-    company_id = 5094  # Modifica questo ID in base ai tuoi dati
+    company_id = 6747  # Modifica questo ID in base ai tuoi dati
 
     company = db[companies_collection].find_one({"id": company_id})
 
@@ -142,7 +142,7 @@ def query4(db, percentage):
     ubos_collection = f'UBO {percentage}'
     transactions_collection = f'Transactions {percentage}'
     
-    company_id = 5094  # Modifica questo ID in base ai tuoi dati
+    company_id = 6747  # Modifica questo ID in base ai tuoi dati
 
     # Recupera l'azienda
     company = db[companies_collection].find_one({"id": company_id})
@@ -162,7 +162,7 @@ def query4(db, percentage):
 
     # Recupera la somma delle transazioni in un periodo specifico
     transaction_ids = company.get('transactions', [])
-    start_date = datetime(2021, 1, 1)
+    start_date = datetime(2019, 1, 1)
     end_date = datetime(2024, 12, 31)
     
     transaction_summary = list(db[transactions_collection].aggregate([
