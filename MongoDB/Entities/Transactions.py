@@ -47,6 +47,21 @@ df_75 = df.iloc[indices_75]
 df_50 = df.iloc[indices_50]
 df_25 = df.iloc[indices_25]
 
+# Definisci il documento speciale come DataFrame
+special_document = pd.DataFrame([{
+    'id': 999999999,  # Assicurati che l'ID sia unico e non presente nei dati reali
+    'type': 'Payment',
+    'date': pd.to_datetime('2024-01-01'),  # Data specifica per il documento speciale
+    'amount': 1000.0,  # Assicurati che l'importo sia significativo
+    'currency': 'USD',  # Assicurati che la valuta sia valida
+}])
+
+# Aggiungi il documento speciale a ciascun DataFrame
+df_100 = pd.concat([df_100, special_document], ignore_index=True)
+df_75 = pd.concat([df_75, special_document], ignore_index=True)
+df_50 = pd.concat([df_50, special_document], ignore_index=True)
+df_25 = pd.concat([df_25, special_document], ignore_index=True)
+
 # Converti i DataFrame in liste di dizionari per l'inserimento in MongoDB
 data_100 = df_100.to_dict(orient='records')
 data_75 = df_75.to_dict(orient='records')
@@ -60,4 +75,4 @@ db[collection_name_50].insert_many(data_50)
 db[collection_name_25].insert_many(data_25)
 
 # Stampa un messaggio di conferma
-print("Data successfully loaded into MongoDB.")
+print("Data successfully loaded into MongoDB with special document included.")

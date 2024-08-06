@@ -45,6 +45,22 @@ df_75 = df.iloc[indices_75]
 df_50 = df.iloc[indices_50]
 df_25 = df.iloc[indices_25]
 
+# Definisci il documento speciale come DataFrame
+special_document = pd.DataFrame([{
+    'id': 999999999,  # Assicurati che l'ID sia unico e non presente nei dati reali
+    'ubo_id': 999999999,  # Assicurati che l'ID sia valido e presente nei dati reali
+    'type': 'Special Check',
+    'result': 'Passed',
+    'date': '2024-01-01',
+    'notes': 'This is a special KYC/AML check document included in all subsets.'
+}])
+
+# Aggiungi il documento speciale a ciascun DataFrame
+df_100 = pd.concat([df_100, special_document], ignore_index=True)
+df_75 = pd.concat([df_75, special_document], ignore_index=True)
+df_50 = pd.concat([df_50, special_document], ignore_index=True)
+df_25 = pd.concat([df_25, special_document], ignore_index=True)
+
 # Converte ciascun DataFrame in un formato adatto per l'inserimento in MongoDB
 data_100 = df_100.to_dict(orient='records')
 data_75 = df_75.to_dict(orient='records')
@@ -58,4 +74,4 @@ db[collection_name_50].insert_many(data_50)
 db[collection_name_25].insert_many(data_25)
 
 # Stampa un messaggio di conferma a schermo
-print("Data successfully loaded into MongoDB.")
+print("Data successfully loaded into MongoDB with special document included.")
