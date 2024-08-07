@@ -28,9 +28,9 @@ dataset_sizes = ['100%', '75%', '50%', '25%']
 queries = ['Query 1', 'Query 2', 'Query 3', 'Query 4', 'Query 5']
 
 # Definisce i colori per i grafici
-color_mongo = '#00ED64' # Green
-color_neo4j = '#014063' # Blue
-color_dataset_size = '#ffa500' # Arancione
+color_mongo = '#00ED64'  # Green
+color_neo4j = '#014063'  # Blue
+color_dataset_size = '#ffa500'  # Arancione
 
 # Funzione per estrarre i valori di intervallo di confidenza dai dati
 def extract_confidence_values(confidence_interval_str):
@@ -38,10 +38,6 @@ def extract_confidence_values(confidence_interval_str):
         return np.nan, np.nan
     matches = re.findall(r'\d+\.\d+', confidence_interval_str)
     return float(matches[0]), float(matches[1])
-
-# Funzione per generare il simbolo colorato
-def colored_square(color):
-    return f'$\u25A0$'  # Il simbolo del quadratino
 
 # Cicla attraverso ogni query per generare i grafici
 for query in queries:
@@ -61,8 +57,8 @@ for query in queries:
     values_neo4j_first_execution = [data_neo4j_query_first_execution[data_neo4j_query_first_execution['Dataset'] == size]['Milliseconds'].values[0] for size in dataset_sizes]
 
     # Crea i barplot per MongoDB e Neo4j
-    plt.bar(index - bar_width/2, values_mongo_first_execution, bar_width, label='MongoDB', color=color_mongo)
-    plt.bar(index + bar_width/2, values_neo4j_first_execution, bar_width, label='Neo4j', color=color_neo4j)
+    plt.bar(index - bar_width / 2, values_mongo_first_execution, bar_width, label='MongoDB', color=color_mongo)
+    plt.bar(index + bar_width / 2, values_neo4j_first_execution, bar_width, label='Neo4j', color=color_neo4j)
 
     plt.xlabel('Dataset Size')
     plt.ylabel('Execution Time (ms)')
@@ -76,8 +72,15 @@ for query in queries:
     for size, mongo_time, neo4j_time in zip(dataset_sizes, values_mongo_first_execution, values_neo4j_first_execution):
         table_data.append([size, f"{mongo_time:.6f}", f"{neo4j_time:.6f}"])
 
+    # Rendi i nomi delle colonne in grassetto utilizzando il parametro 'fontweight'
     column_labels = ['Dataset Size', 'MongoDB', 'Neo4j']
-    plt.table(cellText=table_data, colLabels=column_labels, cellLoc='center', loc='bottom', bbox=[0.0, -0.4, 1, 0.3], colColours=['#ffa50090', '#00ED6490', '#01406390'])
+    table = plt.table(cellText=table_data, colLabels=column_labels, cellLoc='center', loc='bottom', bbox=[0.0, -0.4, 1, 0.3], colColours=['#ffa50090', '#00ED6490', '#01406390'])
+    
+    # Imposta il font in grassetto per le etichette delle colonne
+    for key, cell in table.get_celld().items():
+        if key[0] == 0:  # Prima riga, le etichette delle colonne
+            cell.set_text_props(fontweight='bold')
+    
     plt.subplots_adjust(left=0.2, bottom=0.3)
 
     # Salva e mostra il grafico
@@ -110,8 +113,8 @@ for query in queries:
     neo4j_yerr = [np.array([values_neo4j_avg_30[i] - conf_neo4j_min[i], conf_neo4j_max[i] - values_neo4j_avg_30[i]]) for i in range(len(dataset_sizes))]
 
     # Crea i barplot con barre di errore per MongoDB e Neo4j
-    plt.bar(index - bar_width/2, values_mongo_avg_30, bar_width, yerr=np.array(mongo_yerr).T, capsize=5, label='MongoDB', color=color_mongo)
-    plt.bar(index + bar_width/2, values_neo4j_avg_30, bar_width, yerr=np.array(neo4j_yerr).T, capsize=5, label='Neo4j', color=color_neo4j)
+    plt.bar(index - bar_width / 2, values_mongo_avg_30, bar_width, yerr=np.array(mongo_yerr).T, capsize=5, label='MongoDB', color=color_mongo)
+    plt.bar(index + bar_width / 2, values_neo4j_avg_30, bar_width, yerr=np.array(neo4j_yerr).T, capsize=5, label='Neo4j', color=color_neo4j)
 
     plt.xlabel('Dataset Size')
     plt.ylabel('Average Execution Time (ms)')
@@ -126,7 +129,13 @@ for query in queries:
         table_data.append([size, f"{mongo_avg:.6f}", f"{neo4j_avg:.6f}"])
 
     column_labels = ['Dataset Size', 'MongoDB', 'Neo4j']
-    plt.table(cellText=table_data, colLabels=column_labels, cellLoc='center', loc='bottom', bbox=[0.0, -0.4, 1, 0.3], colColours=['#ffa50090', '#00ED6490', '#01406390'])
+    table = plt.table(cellText=table_data, colLabels=column_labels, cellLoc='center', loc='bottom', bbox=[0.0, -0.4, 1, 0.3], colColours=['#ffa50090', '#00ED6490', '#01406390'])
+
+    # Imposta il font in grassetto per le etichette delle colonne
+    for key, cell in table.get_celld().items():
+        if key[0] == 0:  # Prima riga, le etichette delle colonne
+            cell.set_text_props(fontweight='bold')
+
     plt.subplots_adjust(left=0.2, bottom=0.3)
 
     # Salva e mostra il grafico
