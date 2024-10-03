@@ -25,11 +25,12 @@ data_neo4j_avg_30 = pd.read_csv(neo4j_csv_paths[1], sep=',', dtype={'Confidence 
 
 # Definisce le dimensioni del dataset e le query da analizzare
 dataset_sizes = ['100%', '75%', '50%', '25%']
-queries = ['Query 1', 'Query 2', 'Query 3', 'Query 4']
+queries = ['Query 1', 'Query 2', 'Query 3', 'Query 4', 'Query 5']
 
 # Definisce i colori per i grafici
-color_mongo = '#00ED64' # Green
-color_neo4j = '#014063' # Blue
+color_mongo = '#00ED64'  # Green
+color_neo4j = '#014063'  # Blue
+color_dataset_size = '#ffa500'  # Arancione
 
 # Funzione per estrarre i valori di intervallo di confidenza dai dati
 def extract_confidence_values(confidence_interval_str):
@@ -47,7 +48,7 @@ for query in queries:
     data_neo4j_query_avg_30 = data_neo4j_avg_30[data_neo4j_avg_30['Query'] == query]
 
     # Crea il primo grafico: Tempo di esecuzione per la prima esecuzione
-    plt.figure(figsize=(12, 7))
+    plt.figure(figsize=(12, 9))
     bar_width = 0.35
     index = np.arange(len(dataset_sizes))
 
@@ -56,8 +57,8 @@ for query in queries:
     values_neo4j_first_execution = [data_neo4j_query_first_execution[data_neo4j_query_first_execution['Dataset'] == size]['Milliseconds'].values[0] for size in dataset_sizes]
 
     # Crea i barplot per MongoDB e Neo4j
-    plt.bar(index - bar_width/2, values_mongo_first_execution, bar_width, label='MongoDB', color=color_mongo)
-    plt.bar(index + bar_width/2, values_neo4j_first_execution, bar_width, label='Neo4j', color=color_neo4j)
+    plt.bar(index - bar_width / 2, values_mongo_first_execution, bar_width, label='MongoDB', color=color_mongo)
+    plt.bar(index + bar_width / 2, values_neo4j_first_execution, bar_width, label='Neo4j', color=color_neo4j)
 
     plt.xlabel('Dataset Size')
     plt.ylabel('Execution Time (ms)')
@@ -66,6 +67,22 @@ for query in queries:
     plt.legend()
     plt.tight_layout()
 
+    # Aggiungi la tabella dei risultati
+    table_data = []
+    for size, mongo_time, neo4j_time in zip(dataset_sizes, values_mongo_first_execution, values_neo4j_first_execution):
+        table_data.append([size, f"{mongo_time:.6f}", f"{neo4j_time:.6f}"])
+
+    # Rendi i nomi delle colonne in grassetto utilizzando il parametro 'fontweight'
+    column_labels = ['Dataset Size', 'MongoDB', 'Neo4j']
+    table = plt.table(cellText=table_data, colLabels=column_labels, cellLoc='center', loc='bottom', bbox=[0.0, -0.4, 1, 0.3], colColours=['#ffa50090', '#00ED6490', '#01406390'])
+    
+    # Imposta il font in grassetto per le etichette delle colonne
+    for key, cell in table.get_celld().items():
+        if key[0] == 0:  # Prima riga, le etichette delle colonne
+            cell.set_text_props(fontweight='bold')
+    
+    plt.subplots_adjust(left=0.2, bottom=0.3)
+
     # Salva e mostra il grafico
     filename = f'Histograms/Histogram_Time_Before_Execution_{query}.png'
     plt.savefig(filename)
@@ -73,7 +90,11 @@ for query in queries:
     plt.close()
 
     # Crea il secondo grafico: Tempo di esecuzione medio con intervallo di confidenza
-    plt.figure(figsize=(12, 7))
+    plt.figure(figsize=(12, 9))
+    bar_width = 0.35
+    index = np.arange(len(dataset_sizes))
+
+    # Estrai i valori di tempo di esecuzione medio per MongoDB e Neo4j
     values_mongo_avg_30 = [data_mongo_query_avg_30[data_mongo_query_avg_30['Dataset'] == size]['Average'].values[0] for size in dataset_sizes]
     values_neo4j_avg_30 = [data_neo4j_query_avg_30[data_neo4j_query_avg_30['Dataset'] == size]['Average'].values[0] for size in dataset_sizes]
 
@@ -92,8 +113,8 @@ for query in queries:
     neo4j_yerr = [np.array([values_neo4j_avg_30[i] - conf_neo4j_min[i], conf_neo4j_max[i] - values_neo4j_avg_30[i]]) for i in range(len(dataset_sizes))]
 
     # Crea i barplot con barre di errore per MongoDB e Neo4j
-    plt.bar(index - bar_width/2, values_mongo_avg_30, bar_width, yerr=np.array(mongo_yerr).T, capsize=5, label='MongoDB', color=color_mongo)
-    plt.bar(index + bar_width/2, values_neo4j_avg_30, bar_width, yerr=np.array(neo4j_yerr).T, capsize=5, label='Neo4j', color=color_neo4j)
+    plt.bar(index - bar_width / 2, values_mongo_avg_30, bar_width, yerr=np.array(mongo_yerr).T, capsize=5, label='MongoDB', color=color_mongo)
+    plt.bar(index + bar_width / 2, values_neo4j_avg_30, bar_width, yerr=np.array(neo4j_yerr).T, capsize=5, label='Neo4j', color=color_neo4j)
 
     plt.xlabel('Dataset Size')
     plt.ylabel('Average Execution Time (ms)')
@@ -101,6 +122,21 @@ for query in queries:
     plt.xticks(index, dataset_sizes)
     plt.legend()
     plt.tight_layout()
+
+    # Aggiungi la tabella dei risultati
+    table_data = []
+    for size, mongo_avg, neo4j_avg in zip(dataset_sizes, values_mongo_avg_30, values_neo4j_avg_30):
+        table_data.append([size, f"{mongo_avg:.6f}", f"{neo4j_avg:.6f}"])
+
+    column_labels = ['Dataset Size', 'MongoDB', 'Neo4j']
+    table = plt.table(cellText=table_data, colLabels=column_labels, cellLoc='center', loc='bottom', bbox=[0.0, -0.4, 1, 0.3], colColours=['#ffa50090', '#00ED6490', '#01406390'])
+
+    # Imposta il font in grassetto per le etichette delle colonne
+    for key, cell in table.get_celld().items():
+        if key[0] == 0:  # Prima riga, le etichette delle colonne
+            cell.set_text_props(fontweight='bold')
+
+    plt.subplots_adjust(left=0.2, bottom=0.3)
 
     # Salva e mostra il grafico
     filename = f'Histograms/Histogram_Average_Execution_Time_{query}.png'

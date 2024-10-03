@@ -11,6 +11,8 @@ import numpy as np
 def json_serializer(obj):
     if isinstance(obj, ObjectId):
         return str(obj)
+    elif isinstance(obj, datetime):
+        return obj.isoformat()  # Converti datetime in stringa ISO
     raise TypeError("Non-serializable type")
 
 # Funzione per convertire i campi stringa in oggetti JSON, se possibile
@@ -48,6 +50,8 @@ def measure_query_performance(db, query_number, percentage, iterations=30):
             query3(db, percentage)
         elif query_number == 4:
             query4(db, percentage)
+        elif query_number == 5:
+            query5(db, percentage)
         end_time = time.time()  # Fine misurazione tempo
         execution_time = (end_time - start_time) * 1000  # Tempo di esecuzione in millisecondi
         subsequent_times.append(execution_time)
@@ -60,7 +64,7 @@ def measure_query_performance(db, query_number, percentage, iterations=30):
 
 # Query 1: Recupera un'azienda specifica in base al nome
 def query1(db, percentage):
-    company_name = 'Lynch, Kemp and Mcdowell'
+    company_name = 'Special Company'
     companies = f'Companies {percentage}'  # Nome della collezione per il dataset
     query = db[companies].find_one({"name": company_name})  # Esegui la query
 
@@ -68,7 +72,7 @@ def query1(db, percentage):
 
 # Query 2: Recupera i dettagli di un'azienda e dei suoi amministratori
 def query2(db, percentage):
-    company_id = 6747
+    company_id = 999999999
     companies = f'Companies {percentage}'
     administrators = f'Administrators {percentage}'
     company = db[companies].find_one({"id": company_id})
@@ -112,7 +116,7 @@ def query3(db, percentage):
     companies_collection = f'Companies {percentage}'
     administrators_collection = f'Administrators {percentage}'
     ubos_collection = f'UBO {percentage}'
-    company_id = 6747  # Modifica questo ID in base ai tuoi dati
+    company_id = 999999999  # Modifica questo ID in base ai tuoi dati
 
     company = db[companies_collection].find_one({"id": company_id})
 
@@ -142,7 +146,7 @@ def query4(db, percentage):
     ubos_collection = f'UBO {percentage}'
     transactions_collection = f'Transactions {percentage}'
     
-    company_id = 6747  # Modifica questo ID in base ai tuoi dati
+    company_id = 999999999  # Modifica questo ID in base ai tuoi dati
 
     # Recupera l'azienda
     company = db[companies_collection].find_one({"id": company_id})
@@ -187,6 +191,55 @@ def query4(db, percentage):
     company['transactions_summary'] = transaction_summary
     
     return company_id, company, administrators_details, ubos_details, transaction_summary
+
+# Query 5: Recupera i dettagli dell'azienda, dei suoi amministratori, UBO e la somma delle transazioni in una valuta specifica e risultati KYC/AML recenti
+def query5(db, percentage):
+    companies_collection = f'Companies {percentage}'
+    administrators_collection = f'Administrators {percentage}'
+    ubos_collection = f'UBO {percentage}'
+    transactions_collection = f'Transactions {percentage}'
+    kyc_aml_checks_collection = f'KYC_AML_Checks {percentage}'
+    
+    company_id = 999999999  # Modifica questo ID in base ai tuoi dati
+
+    # Recupera l'azienda
+    company = db[companies_collection].find_one({"id": company_id})
+    
+    if not company:
+        return company_id, False, [], [], 0, []
+    
+    company = convert_string_fields_to_json(company)
+    
+    # Recupera i dettagli degli amministratori
+    admin_ids = company.get('administrators', [])
+    administrators_details = list(db[administrators_collection].find({"id": {"$in": admin_ids}}))
+
+    # Recupera i dettagli degli UBO maggiori di una certa quota
+    ubo_ids = company.get('ubo', [])
+    ubos_details = list(db[ubos_collection].find({"id": {"$in": ubo_ids}, "ownership_percentage": {"$gt": 25}}))
+
+    # Recupera la somma delle transazioni in un periodo specifico
+    transaction_ids = company.get('transactions', [])
+    date = datetime(1950,3,10)
+    currency = "USD"
+    
+    transaction_summary = list(db[transactions_collection].aggregate([
+        {"$match": {"id": {"$in": transaction_ids}, "currency": currency, "date": {"$gte": date}}},
+        {"$group": {"_id": None, "total_amount": {"$sum": "$amount"}}},
+        {"$project": {"_id": 0, "total_amount": 1}}
+    ]))
+    
+    # Recupera i dettagli dei KYC/AML checks
+    kyc_aml_checks_ids = company.get('kyc_aml_checks', [])
+    kyc_aml_checks_details = list(db[kyc_aml_checks_collection].find({"id": {"$in": kyc_aml_checks_ids}, "date": {"$gte": date}}))
+
+    # Aggiungi i dettagli degli amministratori, degli UBO, delle transazioni e dei KYC/AML checks all'azienda
+    company['administrators_details'] = administrators_details
+    company['ubo_details'] = ubos_details
+    company['transactions_summary'] = transaction_summary
+    company['kyc_aml_checks_details'] = kyc_aml_checks_details
+    
+    return company_id, company, administrators_details, ubos_details, transaction_summary, kyc_aml_checks_details
 
 # Funzione principale per eseguire le query e misurare le performance
 def main():
@@ -279,6 +332,27 @@ def main():
         print(f"Average time of 30 successive executions (Query 4): {average_time_subsequent} ms")
         print(f"Confidence Interval (Query 4): [{round(mean - margin_of_error, 2)}, {round(mean + margin_of_error, 2)}] ms\n")
         average_response_times[f"{percentage} - Query 4"] = (average_time_subsequent, mean, margin_of_error)
+
+        # Query 5: Recupera i dettagli dell'azienda, dei suoi amministratori, UBO e la somma delle transazioni in una valuta specifica e risultati KYC/AML recenti
+        start_time = time.time()
+        company_id, company, administrators_details, ubos_details, transaction_summary, kyc_aml_checks_details = query5(db, percentage)
+        end_time = time.time()
+        if company:
+            company_json = json.dumps(company, indent=4, default=json_serializer)
+            # administrators_json = json.dumps(administrators, indent=4, default=json_serializer)
+            print(f"Company details with ID {company_id} Query 5: \n{company_json}\n")
+            # print(f"Dettagli degli amministratori dell'azienda con ID {company_id}: \n{administrators_json}\n")
+        else:
+            print(f"No companies found with ID {company_id}\n")
+
+        first_execution_time = round((end_time - start_time) * 1000, 2)
+        print(f"Response Time (First Run - Query 5): {first_execution_time} ms")
+        first_execution_response_times[f"{percentage} - Query 5"] = first_execution_time
+
+        average_time_subsequent, mean, margin_of_error = measure_query_performance(db, 5, percentage)
+        print(f"Average time of 30 successive executions (Query 5): {average_time_subsequent} ms")
+        print(f"Confidence Interval (Query 5): [{round(mean - margin_of_error, 2)}, {round(mean + margin_of_error, 2)}] ms\n")
+        average_response_times[f"{percentage} - Query 5"] = (average_time_subsequent, mean, margin_of_error)
 
         print("-" * 70)  # Separatore tra le diverse percentuali
 
