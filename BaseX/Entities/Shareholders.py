@@ -13,27 +13,8 @@ csv_filename = 'Dataset/File/shareholders.csv'
 # Leggi il file CSV in un DataFrame pandas
 df = pd.read_csv(csv_filename, encoding='ISO-8859-1')
 
-# Verifica se la colonna 'birthdate' esiste
-if 'birthdate' in df.columns:
-    # Crea una maschera per le righe in cui 'type' è 'Person'
-    mask = df['type'].eq("Person")
-    
-    # Converti 'birthdate' in datetime solo per le righe che soddisfano la maschera
-    df.loc[mask, 'birthdate'] = pd.to_datetime(df.loc[mask, 'birthdate'])
-
 # Calcola il numero totale di documenti nel DataFrame
 total_documents = df.shape[0]
-
-# Definisci il documento speciale come DataFrame
-special_document = pd.DataFrame([{
-    'id': 999999999,  # Assicurati che l'ID sia unico e non presente nei dati reali
-    'name': 'Special Shareholder',
-    'type': 'Person',  # Tipo di azionista
-    'ownership_percentage': 100.0,
-    'address': '123 Special Lane',
-    'birthdate': pd.to_datetime('1980-01-01'),  # Assicurati che la data di nascita sia valida
-    'nationality': 'Special Country'  # Assicurati che la nazionalità sia valida
-}])
 
 # Funzione per convertire un DataFrame in XML con escaping corretto dei caratteri speciali
 def escape_xml_chars(text):
@@ -72,7 +53,6 @@ def insert_into_basex(db_name, xml_data):
 # Crea il database 100%
 def create_db_100(df):
     df_100 = df.copy()
-    df_100 = pd.concat([df_100, special_document], ignore_index=True)
     data_100_xml = dataframe_to_xml(df_100)
     insert_into_basex('Shareholders_100', data_100_xml)
     return df_100
@@ -80,7 +60,6 @@ def create_db_100(df):
 # Crea il database 75% dal 100%
 def create_db_75(df_100):
     df_75 = df_100.sample(frac=0.75, random_state=1)
-    df_75 = pd.concat([df_75, special_document], ignore_index=True)
     data_75_xml = dataframe_to_xml(df_75)
     insert_into_basex('Shareholders_75', data_75_xml)
     return df_75
@@ -88,7 +67,6 @@ def create_db_75(df_100):
 # Crea il database 50% dal 75%
 def create_db_50(df_75):
     df_50 = df_75.sample(frac=0.50, random_state=1)
-    df_50 = pd.concat([df_50, special_document], ignore_index=True)
     data_50_xml = dataframe_to_xml(df_50)
     insert_into_basex('Shareholders_50', data_50_xml)
     return df_50
@@ -96,7 +74,6 @@ def create_db_50(df_75):
 # Crea il database 25% dal 50%
 def create_db_25(df_50):
     df_25 = df_50.sample(frac=0.25, random_state=1)
-    df_25 = pd.concat([df_25, special_document], ignore_index=True)
     data_25_xml = dataframe_to_xml(df_25)
     insert_into_basex('Shareholders_25', data_25_xml)
     return df_25
