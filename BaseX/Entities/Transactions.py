@@ -1,16 +1,10 @@
 import pandas as pd
-import pymongo
 import random
+import sys
+import os
 
-# Connessione al server MongoDB locale
-client = pymongo.MongoClient("mongodb://localhost:27017/")
-db = client["UBO"]  # Seleziona il database 'UBO'
-
-# Nomi delle collezioni per i diversi dataset delle transazioni
-collection_name_100 = 'Transactions 100%'
-collection_name_75 = 'Transactions 75%'
-collection_name_50 = 'Transactions 50%'
-collection_name_25 = 'Transactions 25%'
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from BaseXClient import BaseXClient
 
 # Nome del file CSV da cui leggere i dati
 csv_filename = 'Dataset/File/transactions.csv'
@@ -25,28 +19,6 @@ if 'date' in df.columns:
 # Calcola il numero totale di documenti nel DataFrame
 total_documents = df.shape[0]
 
-# Calcola il numero di documenti per ciascun dataset
-n_100 = int(total_documents)
-n_75 = int(0.75 * total_documents)
-n_50 = int(0.50 * total_documents)
-n_25 = int(0.25 * total_documents)
-
-# Crea una lista di indici e mescola casualmente
-indices = list(range(total_documents))
-random.shuffle(indices)
-
-# Seleziona gli indici per ciascun dataset
-indices_100 = indices[:n_100]
-indices_75 = indices[:n_75]
-indices_50 = indices[:n_50]
-indices_25 = indices[:n_25]
-
-# Crea DataFrame per ciascun dataset in base agli indici selezionati
-df_100 = df.iloc[indices_100]
-df_75 = df.iloc[indices_75]
-df_50 = df.iloc[indices_50]
-df_25 = df.iloc[indices_25]
-
 # Definisci il documento speciale come DataFrame
 special_document = pd.DataFrame([{
     'id': 999999999,  # Assicurati che l'ID sia unico e non presente nei dati reali
@@ -56,23 +28,75 @@ special_document = pd.DataFrame([{
     'currency': 'USD',  # Assicurati che la valuta sia valida
 }])
 
-# Aggiungi il documento speciale a ciascun DataFrame
-df_100 = pd.concat([df_100, special_document], ignore_index=True)
-df_75 = pd.concat([df_75, special_document], ignore_index=True)
-df_50 = pd.concat([df_50, special_document], ignore_index=True)
-df_25 = pd.concat([df_25, special_document], ignore_index=True)
+# Funzione per convertire un DataFrame in XML con escaping corretto dei caratteri speciali
+def escape_xml_chars(text):
+    if isinstance(text, str):
+        return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;").replace("'", "&apos;")
+    return text
 
-# Converti i DataFrame in liste di dizionari per l'inserimento in MongoDB
-data_100 = df_100.to_dict(orient='records')
-data_75 = df_75.to_dict(orient='records')
-data_50 = df_50.to_dict(orient='records')
-data_25 = df_25.to_dict(orient='records')
+def dataframe_to_xml(df):
+    xml = ['<transactions>']
+    for _, row in df.iterrows():
+        xml.append('  <transaction>')
+        for field in df.columns:
+            value = escape_xml_chars(str(row[field]))  # Escapa i caratteri speciali nel testo
+            xml.append(f'    <{field}>{value}</{field}>')
+        xml.append('  </transaction>')
+    xml.append('</transactions>')
+    return '\n'.join(xml)
 
-# Inserisci i dati nelle rispettive collezioni MongoDB
-db[collection_name_100].insert_many(data_100)
-db[collection_name_75].insert_many(data_75)
-db[collection_name_50].insert_many(data_50)
-db[collection_name_25].insert_many(data_25)
+# Funzione per connettersi a BaseX e inserire i dati
+def insert_into_basex(db_name, xml_data):
+    try:
+        session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
+        try:
+            print(f"Creating database: {db_name}")
+            session.execute(f"CREATE DB {db_name}")
+            print(f"Length of XML data for {db_name}: {len(xml_data)} characters")
+            session.add(f"{db_name}.xml", xml_data)
+            print(f"Data successfully loaded into {db_name} in BaseX.")
+        except Exception as e:
+            print(f"An error occurred during data insertion: {e}")
+        finally:
+            session.close()
+    except Exception as e:
+        print(f"Connection error: {e}")
 
-# Stampa un messaggio di conferma
-print("Data successfully loaded into MongoDB with special document included.")
+# Crea il database 100%
+def create_db_100(df):
+    df_100 = df.copy()
+    df_100 = pd.concat([df_100, special_document], ignore_index=True)
+    data_100_xml = dataframe_to_xml(df_100)
+    insert_into_basex('Transactions_100', data_100_xml)
+    return df_100
+
+# Crea il database 75% dal 100%
+def create_db_75(df_100):
+    df_75 = df_100.sample(frac=0.75, random_state=1)
+    df_75 = pd.concat([df_75, special_document], ignore_index=True)
+    data_75_xml = dataframe_to_xml(df_75)
+    insert_into_basex('Transactions_75', data_75_xml)
+    return df_75
+
+# Crea il database 50% dal 75%
+def create_db_50(df_75):
+    df_50 = df_75.sample(frac=0.50, random_state=1)
+    df_50 = pd.concat([df_50, special_document], ignore_index=True)
+    data_50_xml = dataframe_to_xml(df_50)
+    insert_into_basex('Transactions_50', data_50_xml)
+    return df_50
+
+# Crea il database 25% dal 50%
+def create_db_25(df_50):
+    df_25 = df_50.sample(frac=0.25, random_state=1)
+    df_25 = pd.concat([df_25, special_document], ignore_index=True)
+    data_25_xml = dataframe_to_xml(df_25)
+    insert_into_basex('Transactions_25', data_25_xml)
+    return df_25
+
+# Avvia il processo di creazione sequenziale dei database
+df_100 = create_db_100(df)
+df_75 = create_db_75(df_100)
+df_50 = create_db_50(df_75)
+df_25 = create_db_25(df_50)
+
