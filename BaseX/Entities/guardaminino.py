@@ -6,10 +6,22 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from BaseXClient import BaseXClient
 
 # Nome dei file CSV da cui leggere i dati delle entità
-csv_files = ['Dataset/File/administrators.csv', 'Dataset/File/companies.csv', 'Dataset/File/kyc_aml_checks.csv', 'Dataset/File/shareholders.csv', 'Dataset/File/transactions.csv', 'Dataset/File/ubo.csv']  # Add your entity CSVs here
+csv_files = {
+    'administrators': 'Dataset/File/administrators.csv',
+    'companies': 'Dataset/File/companies.csv',
+    'kyc_aml_checks': 'Dataset/File/kyc_aml_checks.csv',
+    'shareholders': 'Dataset/File/shareholders.csv',
+    'transactions': 'Dataset/File/transactions.csv',
+    'ubo': 'Dataset/File/ubo.csv'
+}
 
-# Leggi tutti i file CSV in un DataFrame pandas
-dfs = [pd.read_csv(file, encoding='ISO-8859-1') for file in csv_files]
+# Leggi tutti i file CSV in un unico DataFrame pandas, aggiungendo una colonna 'entity_type' per indicare l'entità di origine
+dfs = []
+for entity_type, file_path in csv_files.items():
+    df = pd.read_csv(file_path, encoding='ISO-8859-1')
+    df['entity_type'] = entity_type  # Aggiungi una colonna per l'entità
+    dfs.append(df)
+
 df = pd.concat(dfs, ignore_index=True)  # Combina tutti i DataFrame in uno solo
 
 # Funzione per convertire un DataFrame in XML con escaping corretto dei caratteri speciali
@@ -18,13 +30,18 @@ def escape_xml_chars(text):
         return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;").replace("'", "&apos;")
     return text
 
+# Funzione per convertire un DataFrame in XML, omettendo i campi non presenti o NaN e aggiungendo l'attributo entity_type
 def dataframe_to_xml(df):
     xml = ['<ubo_records>']
     for _, row in df.iterrows():
-        xml.append('  <ubo_record>')
+        entity_type = row['entity_type']
+        xml.append(f'  <ubo_record entity_type="{entity_type}">')  # Aggiungi attributo entity_type
         for field in df.columns:
-            value = escape_xml_chars(str(row[field]))  # Escapa i caratteri speciali nel testo
-            xml.append(f'    <{field}>{value}</{field}>')
+            if field != 'entity_type':  # Non aggiungere il campo 'entity_type' come tag
+                value = row[field]
+                if pd.notna(value):  # Aggiungi solo i campi non NaN
+                    escaped_value = escape_xml_chars(str(value))  # Escapa i caratteri speciali
+                    xml.append(f'    <{field}>{escaped_value}</{field}>')
         xml.append('  </ubo_record>')
     xml.append('</ubo_records>')
     return '\n'.join(xml)
