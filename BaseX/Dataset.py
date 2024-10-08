@@ -1,8 +1,5 @@
 import pandas as pd
-import sys
-import os
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from BaseXClient import BaseXClient
 
 # Nome dei file CSV da cui leggere i dati delle entità
