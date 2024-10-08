@@ -112,10 +112,36 @@ graph50 = Graph("bolt://localhost:7687", user="neo4j", password="12345678", name
 graph25 = Graph("bolt://localhost:7687", user="neo4j", password="12345678", name="dataset25")
 
 # Crea i grafi per i diversi dataset
+
+# Il 100% del dataset completo
 create_graph(graph100, admins, shareholders, ubos, transactions, companies, kyc_aml_checks)
-create_graph(graph75, admins.sample(frac=0.75), shareholders.sample(frac=0.75), ubos.sample(frac=0.75), transactions.sample(frac=0.75), companies.sample(frac=0.75), kyc_aml_checks.sample(frac=0.75))
-create_graph(graph50, admins.sample(frac=0.50), shareholders.sample(frac=0.50), ubos.sample(frac=0.50), transactions.sample(frac=0.50), companies.sample(frac=0.50), kyc_aml_checks.sample(frac=0.50))
-create_graph(graph25, admins.sample(frac=0.25), shareholders.sample(frac=0.25), ubos.sample(frac=0.25), transactions.sample(frac=0.25), companies.sample(frac=0.25), kyc_aml_checks.sample(frac=0.25))
+
+# Prendi il 75% dal 100%
+admins_75 = admins.sample(frac=0.75)
+shareholders_75 = shareholders.sample(frac=0.75)
+ubos_75 = ubos.sample(frac=0.75)
+transactions_75 = transactions.sample(frac=0.75)
+companies_75 = companies.sample(frac=0.75)
+kyc_aml_checks_75 = kyc_aml_checks.sample(frac=0.75)
+create_graph(graph75, admins_75, shareholders_75, ubos_75, transactions_75, companies_75, kyc_aml_checks_75)
+
+# Prendi il 50% dal 75%
+admins_50 = admins_75.sample(frac=0.6667)  # 50% del totale = 66.67% del 75%
+shareholders_50 = shareholders_75.sample(frac=0.6667)
+ubos_50 = ubos_75.sample(frac=0.6667)
+transactions_50 = transactions_75.sample(frac=0.6667)
+companies_50 = companies_75.sample(frac=0.6667)
+kyc_aml_checks_50 = kyc_aml_checks_75.sample(frac=0.6667)
+create_graph(graph50, admins_50, shareholders_50, ubos_50, transactions_50, companies_50, kyc_aml_checks_50)
+
+# Prendi il 25% dal 50%
+admins_25 = admins_50.sample(frac=0.5)  # 25% del totale = 50% del 50%
+shareholders_25 = shareholders_50.sample(frac=0.5)
+ubos_25 = ubos_50.sample(frac=0.5)
+transactions_25 = transactions_50.sample(frac=0.5)
+companies_25 = companies_50.sample(frac=0.5)
+kyc_aml_checks_25 = kyc_aml_checks_50.sample(frac=0.5)
+create_graph(graph25, admins_25, shareholders_25, ubos_25, transactions_25, companies_25, kyc_aml_checks_25)
 
 # Stampa un messaggio di conferma
 print("Data successfully loaded into Neo4j.")
