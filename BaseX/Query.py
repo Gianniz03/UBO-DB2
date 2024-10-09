@@ -1,16 +1,8 @@
 from BaseXClient import BaseXClient
-from datetime import datetime
-import json
 import time
 import csv
 import scipy.stats as stats
 import numpy as np
-
-# Funzione per serializzare oggetti datetime in formato stringa per JSON
-def json_serializer(obj):
-    if isinstance(obj, datetime):
-        return obj.isoformat()
-    raise TypeError("Non-serializable type")
 
 # Funzione per calcolare l'intervallo di confidenza per una media
 def calculate_confidence_interval(data, confidence=0.95):
@@ -38,10 +30,13 @@ def measure_query_performance(session, query_function, percentage, iterations=30
     return average_time_subsequent, mean, margin_of_error
 
 # Query 1: Recupera un'azienda per nome
-def query1(session, percentage):
-    company_name = 'Special Company'
+def query1(session, percentage, entity_type="companies"):
+    company_name = 'Roberts, Brown and Moore'
+    
+    # Query dinamica che cambia in base al tipo di entità
     query = f'''
-        for $c in collection("UBO_{percentage}")//company[name='{company_name}']
+        for $c in collection(concat("UBO_",'{percentage}'))//ubo_record[@entity_type='{entity_type}']
+        where $c/name = '{company_name}'
         return $c
     '''
     
@@ -50,52 +45,158 @@ def query1(session, percentage):
     
     return company_name, result
 
+
 # Query 2: Recupera i dettagli di un'azienda e dei suoi amministratori
 def query2(session, percentage):
-    company_id = 999999999
+    company_id = 9133  # L'ID dell'azienda di cui vuoi recuperare i dettagli
+    entity_type = "companies"  # Specifica il tipo di entità
+    
     query = f'''
-        let $company := collection("UBO_{percentage}")//company[id={company_id}]
-        let $admins := collection("UBO_{percentage}")//administrator[id=($company/administrators/id)]
-        return <result>{{$company, $admins}}</result>
+        declare option output:method "xml";
+        declare option output:indent "yes";
+
+        let $company := collection(concat("UBO_", '25'))//ubo_record[@entity_type='companies' and id=9133]
+
+        let $admins_ids := tokenize(substring-before(substring-after($company/administrators/text(), '['), ']'), ',\s*')
+
+        let $admins := 
+            for $admin_id in $admins_ids
+            return collection(concat("UBO_", '25'))//ubo_record[@entity_type='administrators' and id=xs:integer($admin_id)]
+
+        return 
+            <result>
+                {{ 
+                    $company,
+                    $admins
+                }}
+             </result>
     '''
+    
     result = session.query(query).execute()
     return company_id, result
 
-# Query 3: Recupera dettagli azienda, amministratori e UBO con più del 25%
+
+# Query 3: Recupera i dettagli dell'azienda, dei suoi amministratori e degli UBO con più del 25%
 def query3(session, percentage):
-    company_id = 999999999
+    company_id = 3825  # Id della compagnia da recuperare
     query = f'''
-        let $company := collection("UBO_{percentage}")//company[id={company_id}]
-        let $admins := collection("UBO_{percentage}")//administrator[id=($company/administrators/id)]
-        let $ubos := collection("UBO_{percentage}")//ubo[id=($company/ubo/id) and ownership_percentage > 25]
-        return <result>{{$company, $admins, $ubos}}</result>
+        declare option output:method "xml";
+        declare option output:indent "yes";
+
+        let $company := collection(concat("UBO_", '{percentage}'))//ubo_record[@entity_type='companies' and id={company_id}]
+        
+        let $admins_ids := tokenize(substring-before(substring-after($company/administrators/text(), '['), ']'), ',\\s*')
+        
+        let $admins := 
+            for $admin_id in $admins_ids
+            return collection(concat("UBO_", '{percentage}'))//ubo_record[@entity_type='administrators' and id=xs:integer($admin_id)]
+
+        let $ubo_ids := tokenize(substring-before(substring-after($company/ubo/text(), '['), ']'), ',\\s*')
+
+        let $ubos := 
+            for $ubo_id in $ubo_ids
+            let $ubo_record := collection(concat("UBO_", '{percentage}'))//ubo_record[@entity_type='ubo' and id=xs:integer($ubo_id)]
+            where xs:decimal($ubo_record/ownership_percentage) > 25 (: Filtro per UBO con partecipazione > 25% :)
+            return $ubo_record
+
+        return 
+            <result>
+                {{ 
+                    $company,
+                    <administrators>
+                        {{ 
+                            if (count($admins) > 0) 
+                            then 
+                                $admins 
+                            else 
+                                <message>No administrators found</message> 
+                        }}
+                    </administrators>,
+                    <ubos>
+                        {{ 
+                            if (count($ubos) > 0) 
+                            then 
+                                $ubos 
+                            else 
+                                <message>No UBOs found with more than 25% ownership</message>
+                        }}
+                    </ubos>
+                }}
+            </result>
     '''
     result = session.query(query).execute()
     return company_id, result
 
-# Query 4: Recupera azienda, amministratori, UBO e transazioni
+
+# Query 4: Recupera i dettagli dell'azienda, dei suoi amministratori, UBO e la somma delle transazioni in un periodo
 def query4(session, percentage):
-    company_id = 999999999
+    company_id = 9133
     query = f'''
-        let $company := collection("UBO_{percentage}")//company[id={company_id}]
-        let $admins := collection("UBO_{percentage}")//administrator[id=($company/administrators/id)]
-        let $ubos := collection("UBO_{percentage}")//ubo[id=($company/ubo/id) and ownership_percentage > 25]
-        let $transactions := collection("UBO_{percentage}")//transaction[id=($company/transactions/id) and date ge '2019-01-01' and date le '2024-12-31']
+        declare option output:method "xml";
+        declare option output:indent "yes";
+
+        let $company := collection(concat("UBO_", '{percentage}'))//ubo_record[@entity_type='companies' and id={company_id}]
+
+        let $admins_ids := tokenize(substring-before(substring-after($company/administrators/text(), '['), ']'), ',\\s*')
+        
+        let $admins := 
+            for $admin_id in $admins_ids
+            return collection(concat("UBO_", '{percentage}'))//ubo_record[@entity_type='administrators' and id=xs:integer($admin_id)]
+
+        let $ubo_ids := tokenize(substring-before(substring-after($company/ubo/text(), '['), ']'), ',\\s*')
+        
+        let $ubos := 
+            for $ubo_id in $ubo_ids
+            let $ubo_record := collection(concat("UBO_", '{percentage}'))//ubo_record[@entity_type='ubo' and id=xs:integer($ubo_id)]
+            where xs:decimal($ubo_record/ownership_percentage) > 25
+            return $ubo_record
+
+        let $transactions := collection(concat("UBO_", '{percentage}'))//ubo_record[@entity_type='transactions' and id=($company/transactions/id) and date ge xs:date('2010-01-01') and date le xs:date('2024-12-31')]
+        
         let $total := sum($transactions/amount)
-        return <result>{{$company, $admins, $ubos, <total-amount>{{ $total }}</total-amount>}}</result>
+
+        return <result>
+            {{
+                $company,
+                <administrators>
+                    {{
+                        if (count($admins) > 0) 
+                        then $admins 
+                        else <message>No administrators found</message> 
+                    }}
+                </administrators>,
+                <ubos>
+                    {{
+                        if (count($ubos) > 0) 
+                        then $ubos 
+                        else <message>No UBOs found with more than 25% ownership</message>
+                    }}
+                </ubos>,
+                <transactions>
+                    {{
+                        if (count($transactions) > 0) 
+                        then $transactions 
+                        else <message>No transactions found in the specified period</message>
+                    }}
+                </transactions>,
+                <total-amount>{{ $total }}</total-amount>
+            }}
+        </result>
     '''
     result = session.query(query).execute()
     return company_id, result
 
-# Query 5: Recupera azienda, amministratori, UBO, transazioni e KYC/AML
+
+
+# Query 5: Recupera i dettagli dell'azienda, dei suoi amministratori, UBO e la somma delle transazioni in una valuta specifica e risultati KYC/AML recenti
 def query5(session, percentage):
-    company_id = 999999999
+    company_id = 9133
     query = f'''
-        let $company := collection("UBO_{percentage}")//company[id={company_id}]
-        let $admins := collection("UBO_{percentage}")//administrator[id=($company/administrators/id)]
-        let $ubos := collection("UBO_{percentage}")//ubo[id=($company/ubo/id) and ownership_percentage > 25]
-        let $transactions := collection("UBO_{percentage}")//transaction[id=($company/transactions/id) and currency='USD' and date ge '1950-03-10']
-        let $kyc := collection("UBO_{percentage}")//check[id=($company/kyc_aml_checks/id) and date ge '1950-03-10']
+        let $company := collection(concat("UBO_",'{percentage}'))//company[id={company_id}]
+        let $admins := collection(concat("UBO_",'{percentage}'))//administrator[id=($company/administrators/id)]
+        let $ubos := collection(concat("UBO_",'{percentage}'))//ubo[id=($company/ubo/id) and ownership_percentage > 25]
+        let $transactions := collection(concat("UBO_",'{percentage}'))//transaction[id=($company/transactions/id) and currency='USD' and date ge '1950-03-10']
+        let $kyc := collection(concat("UBO_",'{percentage}'))//check[id=($company/kyc_aml_checks/id) and date ge '1950-03-10']
         let $total := sum($transactions/amount)
         return <result>{{$company, $admins, $ubos, $kyc, <total-amount>{{ $total }}</total-amount>}}</result>
     '''
@@ -114,33 +215,90 @@ def main():
     for percentage in percentages:
         print(f"\nAnalysis by percentage: {percentage}%\n")
 
-        # Query 1
-        start_time = time.time()
-        company_name, query = query1(session, percentage)
+        # Query 1: Recupera il nome dell'azienda con il nome specificato
+        """ start_time = time.time()
+        company_name, company = query1(session, percentage)
         end_time = time.time()
-        if query:
-            print(f"Company name with the specified name: \n{query}\n")
+        if company:
+            print(f"Company name with the specified name: \n{company}\n")
         else:
             print(f"No companies found with the specified name: {company_name}\n")
 
         first_execution_time = round((end_time - start_time) * 1000, 2)
+        print(f"Response time (first run - Query 1): {first_execution_time} ms")
         first_execution_response_times[f"{percentage} - Query 1"] = first_execution_time
 
         average_time_subsequent, mean, margin_of_error = measure_query_performance(session, query1, percentage)
-        average_response_times[f"{percentage} - Query 1"] = (average_time_subsequent, mean, margin_of_error)
+        print(f"Average time of 30 successive executions (Query 1): {average_time_subsequent} ms")
+        print(f"Confidence interval (Query 1): [{round(mean - margin_of_error, 2)}, {round(mean + margin_of_error, 2)}] ms\n")
+        average_response_times[f"{percentage} - Query 1"] = (average_time_subsequent, mean, margin_of_error) """
+        
+        # Query 2: Recupera i dettagli dell'azienda e dei suoi amministratori
+        """ start_time = time.time()
+        company_id, company = query2(session, percentage)
+        end_time = time.time()
+        if company:
+            print(f"Company details with ID {company_id} and administrators: \n{company}\n")
+            # print(f"Dettagli degli amministratori dell'azienda con ID {company_id}: \n{administrators}\n")
+        else:
+            print(f"No companies found with ID {company_id}\n")
 
-        # Ripetere il processo per le altre query (query2, query3, query4, query5)
-        # ...
+        first_execution_time = round((end_time - start_time) * 1000, 2)
+        print(f"Response Time (First Run - Query 2): {first_execution_time} ms")
+        first_execution_response_times[f"{percentage} - Query 2"] = first_execution_time
+
+        average_time_subsequent, mean, margin_of_error = measure_query_performance(session, query2, percentage)
+        print(f"Average time of 30 successive executions (Query 2): {average_time_subsequent} ms")
+        print(f"Confidence Interval (Query 2): [{round(mean - margin_of_error, 2)}, {round(mean + margin_of_error, 2)}] ms\n")
+        average_response_times[f"{percentage} - Query 2"] = (average_time_subsequent, mean, margin_of_error) """
+
+        # Query 3: Recupera i dettagli dell'azienda, dei suoi amministratori e degli UBO con più del 25%
+        """ start_time = time.time()
+        company_id, company = query3(session, percentage)
+        end_time = time.time()
+        if company:
+            print(f"Company details with ID {company_id}, administrators and UBO: \n{company}\n")
+        else:
+            print(f"No companies found with ID {company_id}\n")
+
+        first_execution_time = round((end_time - start_time) * 1000, 2)
+        print(f"Response Time (First Run - Query 3): {first_execution_time} ms")
+        first_execution_response_times[f"{percentage} - Query 3"] = first_execution_time
+
+        average_time_subsequent, mean, margin_of_error = measure_query_performance(session, query3, percentage)
+        print(f"Average time of 30 successive executions (Query 3): {average_time_subsequent} ms")
+        print(f"Confidence Interval (Query 3): [{round(mean - margin_of_error, 2)}, {round(mean + margin_of_error, 2)}] ms\n")
+        average_response_times[f"{percentage} - Query 3"] = (average_time_subsequent, mean, margin_of_error) """
+
+        # Query 4: Recupera i dettagli dell'azienda, dei suoi amministratori, UBO e la somma delle transazioni in un periodo
+        start_time = time.time()
+        company_id, company = query4(session, percentage)
+        end_time = time.time()
+        if company:
+            print(f"Company details with ID {company_id}, administrators, UBO and transactions: \n{company}\n")
+        else:
+            print(f"No companies found with ID {company_id}\n")
+
+        first_execution_time = round((end_time - start_time) * 1000, 2)
+        print(f"Response Time (First Run - Query 4): {first_execution_time} ms")
+        first_execution_response_times[f"{percentage} - Query 4"] = first_execution_time
+
+        average_time_subsequent, mean, margin_of_error = measure_query_performance(session, query4, percentage)
+        print(f"Average time of 30 successive executions (Query 4): {average_time_subsequent} ms")
+        print(f"Confidence Interval (Query 4): [{round(mean - margin_of_error, 2)}, {round(mean + margin_of_error, 2)}] ms\n")
+        average_response_times[f"{percentage} - Query 4"] = (average_time_subsequent, mean, margin_of_error)
+
+        print("-" * 70)  # Separatore tra le diverse percentuali
 
     # Salva i risultati
-    with open('basex_response_times_first_execution.csv', mode='w', newline='') as file:
+    with open('BaseX/ResponseTimes/basex_response_times_first_execution.csv', mode='w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(['Dataset', 'Query', 'Milliseconds'])
         for query, first_execution_time in first_execution_response_times.items():
             dataset, query = query.split(' - ')
             writer.writerow([dataset, query, first_execution_time])
 
-    with open('basex_response_times_average_30.csv', mode='w', newline='') as file:
+    with open('BaseX/ResponseTimes/basex_response_times_average_30.csv', mode='w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(['Dataset', 'Query', 'Milliseconds', 'Average', 'Confidence Interval (Min, Max)'])
         for query, (average_time_subsequent, mean_value, margin_of_error) in average_response_times.items():
@@ -148,6 +306,7 @@ def main():
             min_interval = round(mean_value - margin_of_error, 2)
             max_interval = round(mean_value + margin_of_error, 2)
             writer.writerow([dataset, query_name, average_time_subsequent, mean_value, f"{min_interval}, {max_interval}"])
+        print("Average response times were written in 'basex_response_times_first_execution.csv' and 'basex_response_times_average_30.csv'.")
 
     session.close()
 

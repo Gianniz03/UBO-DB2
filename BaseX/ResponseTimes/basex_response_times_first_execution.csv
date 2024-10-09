@@ -1,0 +1,5 @@
+Dataset,Query,Milliseconds
+100,Query 4,400.64
+75,Query 4,262.03
+50,Query 4,177.45
+25,Query 4,91.14
