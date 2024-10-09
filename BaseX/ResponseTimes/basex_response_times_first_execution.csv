@@ -1,5 +1,21 @@
 Dataset,Query,Milliseconds
-100,Query 4,400.64
-75,Query 4,262.03
-50,Query 4,177.45
-25,Query 4,91.14
+100,Query 1,169.33
+100,Query 2,329.25
+100,Query 3,514.01
+100,Query 4,1067.48
+100,Query 5,1126.5
+75,Query 1,125.22
+75,Query 2,247.66
+75,Query 3,399.43
+75,Query 4,798.75
+75,Query 5,840.7
+50,Query 1,84.12
+50,Query 2,172.07
+50,Query 3,263.52
+50,Query 4,513.07
+50,Query 5,565.66
+25,Query 1,48.26
+25,Query 2,88.91
+25,Query 3,141.43
+25,Query 4,262.02
+25,Query 5,277.05
