@@ -3,8 +3,8 @@ import subprocess
 def execute_scripts():
     try:
         # Esegui il primo script
-        print(f"Running MongoDB/Query.py script")
-        subprocess.run(['python', 'MongoDB/Query.py'], check=True)
+        print(f"Running BaseX/Query.py script")
+        subprocess.run(['python', 'BaseX/Query.py'], check=True)
 
         # Esegui il secondo script
         print(f"Running Neo4j/Query.py script")

@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 import re
 import numpy as np
 
-# Definisce i percorsi ai file CSV per i dati di MongoDB e Neo4j
-mongo_csv_paths = [
-    "MongoDB/ResponseTimes/mongodb_times_of_response_first_execution.csv",
-    "MongoDB/ResponseTimes/mongodb_response_times_average_30.csv",
+# Definisce i percorsi ai file CSV per i dati di BaseX e Neo4j
+basex_csv_paths = [
+    "BaseX/ResponseTimes/basex_response_times_first_execution.csv",
+    "BaseX/ResponseTimes/basex_response_times_average_30.csv",
 ]
 
 neo4j_csv_paths = [
@@ -15,9 +15,9 @@ neo4j_csv_paths = [
     "Neo4j/ResponseTimes/neo4j_response_times_average_30.csv",
 ]
 
-# Carica i dati dai file CSV per MongoDB
-data_mongo_first_execution = pd.read_csv(mongo_csv_paths[0], sep=',', dtype={'Confidence Interval (Min, Max)': str})
-data_mongo_avg_30 = pd.read_csv(mongo_csv_paths[1], sep=',', dtype={'Confidence Interval (Min, Max)': str})
+# Carica i dati dai file CSV per BaseX
+data_basex_first_execution = pd.read_csv(basex_csv_paths[0], sep=',', dtype={'Confidence Interval (Min, Max)': str})
+data_basex_avg_30 = pd.read_csv(basex_csv_paths[1], sep=',', dtype={'Confidence Interval (Min, Max)': str})
 
 # Carica i dati dai file CSV per Neo4j
 data_neo4j_first_execution = pd.read_csv(neo4j_csv_paths[0], sep=',', dtype={'Confidence Interval (Min, Max)': str})
@@ -28,7 +28,7 @@ dataset_sizes = ['100%', '75%', '50%', '25%']
 queries = ['Query 1', 'Query 2', 'Query 3', 'Query 4', 'Query 5']
 
 # Definisce i colori per i grafici
-color_mongo = '#00ED64'  # Green
+color_basex = '#00ED64'  # Green
 color_neo4j = '#014063'  # Blue
 color_dataset_size = '#ffa500'  # Arancione
 
@@ -42,8 +42,8 @@ def extract_confidence_values(confidence_interval_str):
 # Cicla attraverso ogni query per generare i grafici
 for query in queries:
     # Filtra i dati per la query corrente
-    data_mongo_query_first_execution = data_mongo_first_execution[data_mongo_first_execution['Query'] == query]
-    data_mongo_query_avg_30 = data_mongo_avg_30[data_mongo_avg_30['Query'] == query]
+    data_basex_query_first_execution = data_basex_first_execution[data_basex_first_execution['Query'] == query]
+    data_basex_query_avg_30 = data_basex_avg_30[data_basex_avg_30['Query'] == query]
     data_neo4j_query_first_execution = data_neo4j_first_execution[data_neo4j_first_execution['Query'] == query]
     data_neo4j_query_avg_30 = data_neo4j_avg_30[data_neo4j_avg_30['Query'] == query]
 
@@ -52,12 +52,12 @@ for query in queries:
     bar_width = 0.35
     index = np.arange(len(dataset_sizes))
 
-    # Estrai i valori di tempo di esecuzione per MongoDB e Neo4j
-    values_mongo_first_execution = [data_mongo_query_first_execution[data_mongo_query_first_execution['Dataset'] == size]['Milliseconds'].values[0] for size in dataset_sizes]
+    # Estrai i valori di tempo di esecuzione per Basex e Neo4j
+    values_basex_first_execution = [data_basex_query_first_execution[data_basex_query_first_execution['Dataset'] == size]['Milliseconds'].values[0] for size in dataset_sizes]
     values_neo4j_first_execution = [data_neo4j_query_first_execution[data_neo4j_query_first_execution['Dataset'] == size]['Milliseconds'].values[0] for size in dataset_sizes]
 
-    # Crea i barplot per MongoDB e Neo4j
-    plt.bar(index - bar_width / 2, values_mongo_first_execution, bar_width, label='MongoDB', color=color_mongo)
+    # Crea i barplot per Basex e Neo4j
+    plt.bar(index - bar_width / 2, values_basex_first_execution, bar_width, label='BaseX', color=color_basex)
     plt.bar(index + bar_width / 2, values_neo4j_first_execution, bar_width, label='Neo4j', color=color_neo4j)
 
     plt.xlabel('Dataset Size')
@@ -69,11 +69,11 @@ for query in queries:
 
     # Aggiungi la tabella dei risultati
     table_data = []
-    for size, mongo_time, neo4j_time in zip(dataset_sizes, values_mongo_first_execution, values_neo4j_first_execution):
-        table_data.append([size, f"{mongo_time:.6f}", f"{neo4j_time:.6f}"])
+    for size, basex_time, neo4j_time in zip(dataset_sizes, values_basex_first_execution, values_neo4j_first_execution):
+        table_data.append([size, f"{basex_time:.6f}", f"{neo4j_time:.6f}"])
 
     # Rendi i nomi delle colonne in grassetto utilizzando il parametro 'fontweight'
-    column_labels = ['Dataset Size', 'MongoDB', 'Neo4j']
+    column_labels = ['Dataset Size', 'BaseX', 'Neo4j']
     table = plt.table(cellText=table_data, colLabels=column_labels, cellLoc='center', loc='bottom', bbox=[0.0, -0.4, 1, 0.3], colColours=['#ffa50090', '#00ED6490', '#01406390'])
     
     # Imposta il font in grassetto per le etichette delle colonne
@@ -94,26 +94,26 @@ for query in queries:
     bar_width = 0.35
     index = np.arange(len(dataset_sizes))
 
-    # Estrai i valori di tempo di esecuzione medio per MongoDB e Neo4j
-    values_mongo_avg_30 = [data_mongo_query_avg_30[data_mongo_query_avg_30['Dataset'] == size]['Average'].values[0] for size in dataset_sizes]
+    # Estrai i valori di tempo di esecuzione medio per Basex e Neo4j
+    values_basex_avg_30 = [data_basex_query_avg_30[data_basex_query_avg_30['Dataset'] == size]['Average'].values[0] for size in dataset_sizes]
     values_neo4j_avg_30 = [data_neo4j_query_avg_30[data_neo4j_query_avg_30['Dataset'] == size]['Average'].values[0] for size in dataset_sizes]
 
-    # Estrai gli intervalli di confidenza per MongoDB e Neo4j
-    conf_intervals_mongo = [extract_confidence_values(data_mongo_query_avg_30[data_mongo_query_avg_30['Dataset'] == size]['Confidence Interval (Min, Max)'].values[0]) for size in dataset_sizes]
+    # Estrai gli intervalli di confidenza per Basex e Neo4j
+    conf_intervals_basex = [extract_confidence_values(data_basex_query_avg_30[data_basex_query_avg_30['Dataset'] == size]['Confidence Interval (Min, Max)'].values[0]) for size in dataset_sizes]
     conf_intervals_neo4j = [extract_confidence_values(data_neo4j_query_avg_30[data_neo4j_query_avg_30['Dataset'] == size]['Confidence Interval (Min, Max)'].values[0]) for size in dataset_sizes]
 
     # Estrai i valori minimi e massimi degli intervalli di confidenza
-    conf_mongo_min = [conf[0] for conf in conf_intervals_mongo]
-    conf_mongo_max = [conf[1] for conf in conf_intervals_mongo]
+    conf_basex_min = [conf[0] for conf in conf_intervals_basex]
+    conf_basex_max = [conf[1] for conf in conf_intervals_basex]
     conf_neo4j_min = [conf[0] for conf in conf_intervals_neo4j]
     conf_neo4j_max = [conf[1] for conf in conf_intervals_neo4j]
 
     # Calcola gli errori per le barre di errore
-    mongo_yerr = [np.array([values_mongo_avg_30[i] - conf_mongo_min[i], conf_mongo_max[i] - values_mongo_avg_30[i]]) for i in range(len(dataset_sizes))]
+    basex_yerr = [np.array([values_basex_avg_30[i] - conf_basex_min[i], conf_basex_max[i] - values_basex_avg_30[i]]) for i in range(len(dataset_sizes))]
     neo4j_yerr = [np.array([values_neo4j_avg_30[i] - conf_neo4j_min[i], conf_neo4j_max[i] - values_neo4j_avg_30[i]]) for i in range(len(dataset_sizes))]
 
-    # Crea i barplot con barre di errore per MongoDB e Neo4j
-    plt.bar(index - bar_width / 2, values_mongo_avg_30, bar_width, yerr=np.array(mongo_yerr).T, capsize=5, label='MongoDB', color=color_mongo)
+    # Crea i barplot con barre di errore per Basex e Neo4j
+    plt.bar(index - bar_width / 2, values_basex_avg_30, bar_width, yerr=np.array(basex_yerr).T, capsize=5, label='BaseX', color=color_basex)
     plt.bar(index + bar_width / 2, values_neo4j_avg_30, bar_width, yerr=np.array(neo4j_yerr).T, capsize=5, label='Neo4j', color=color_neo4j)
 
     plt.xlabel('Dataset Size')
@@ -125,10 +125,10 @@ for query in queries:
 
     # Aggiungi la tabella dei risultati
     table_data = []
-    for size, mongo_avg, neo4j_avg in zip(dataset_sizes, values_mongo_avg_30, values_neo4j_avg_30):
-        table_data.append([size, f"{mongo_avg:.6f}", f"{neo4j_avg:.6f}"])
+    for size, basex_avg, neo4j_avg in zip(dataset_sizes, values_basex_avg_30, values_neo4j_avg_30):
+        table_data.append([size, f"{basex_avg:.6f}", f"{neo4j_avg:.6f}"])
 
-    column_labels = ['Dataset Size', 'MongoDB', 'Neo4j']
+    column_labels = ['Dataset Size', 'BaseX', 'Neo4j']
     table = plt.table(cellText=table_data, colLabels=column_labels, cellLoc='center', loc='bottom', bbox=[0.0, -0.4, 1, 0.3], colColours=['#ffa50090', '#00ED6490', '#01406390'])
 
     # Imposta il font in grassetto per le etichette delle colonne

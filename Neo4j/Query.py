@@ -43,7 +43,7 @@ def measure_query_performance(graph, query_func, percentage, iterations=30):
 
 # Definizione della query 1
 def query1(graph):
-    company_name = 'Special Company'
+    company_name = 'Kelly-Decker'
     query = f"""
     MATCH (c:Companies {{name: '{company_name}'}})
     RETURN c
@@ -53,7 +53,7 @@ def query1(graph):
 
 # Definizione della query 2
 def query2(graph):
-    company_id = 999999999
+    company_id = 9710
     query = f"""
     MATCH (c:Companies {{id: {company_id}}})
     OPTIONAL MATCH (c)-[:COMPANY_HAS_ADMINISTRATOR]->(a:Administrators)
@@ -64,7 +64,7 @@ def query2(graph):
 
 # Definizione della query 3
 def query3(graph):
-    company_id = 999999999
+    company_id = 9710
     query = f"""
     MATCH (c:Companies {{id: {company_id}}})
     OPTIONAL MATCH (c)-[:COMPANY_HAS_ADMINISTRATOR]->(a:Administrators)
@@ -78,14 +78,15 @@ def query3(graph):
 
 # Definizione della query 4
 def query4(graph):
-    company_id = 999999999
-    start_date = "2019-01-01"
-    end_date = "2024-12-31"
+    company_id = 9710
+    start_date = "2016-07-01"
+    end_date = "2024-07-01"
+    ubo_percentage = 25
     query = f"""
     MATCH (c:Companies {{id: {company_id}}})
     OPTIONAL MATCH (c)-[:COMPANY_HAS_ADMINISTRATOR]->(a:Administrators)
     OPTIONAL MATCH (c)-[:COMPANY_HAS_UBO]->(u:Ubo)
-    WHERE u.ownership_percentage > 25
+    WHERE u.ownership_percentage > {ubo_percentage}
     OPTIONAL MATCH (c)-[:COMPANY_HAS_TRANSACTION]->(t:Transactions)
     WHERE t.date >= '{start_date}' AND t.date <= '{end_date}'
     RETURN c, collect(DISTINCT a) as administrators, collect(DISTINCT u) as ubos, sum(t.amount) as total_amount
@@ -94,9 +95,9 @@ def query4(graph):
     return result
 
 def query5(graph):
-    company_id = 999999999
-    currency = "USD"
-    date = "2018-01-01"
+    company_id = 9710
+    currency = "EUR"
+    date = "2003-01-01"
 
     # Query per recuperare l'azienda e i dettagli associati
     query = f"""
