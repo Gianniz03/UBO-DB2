@@ -6,7 +6,7 @@ import numpy as np
 
 # Definisce i percorsi ai file CSV per i dati di BaseX e Neo4j
 basex_csv_paths = [
-    "BaseX/ResponseTimes/basex_times_of_response_first_execution.csv",
+    "BaseX/ResponseTimes/basex_response_times_first_execution.csv",
     "BaseX/ResponseTimes/basex_response_times_average_30.csv",
 ]
 
@@ -52,12 +52,12 @@ for query in queries:
     bar_width = 0.35
     index = np.arange(len(dataset_sizes))
 
-    # Estrai i valori di tempo di esecuzione per basexDB e Neo4j
+    # Estrai i valori di tempo di esecuzione per Basex e Neo4j
     values_basex_first_execution = [data_basex_query_first_execution[data_basex_query_first_execution['Dataset'] == size]['Milliseconds'].values[0] for size in dataset_sizes]
     values_neo4j_first_execution = [data_neo4j_query_first_execution[data_neo4j_query_first_execution['Dataset'] == size]['Milliseconds'].values[0] for size in dataset_sizes]
 
-    # Crea i barplot per basexDB e Neo4j
-    plt.bar(index - bar_width / 2, values_basex_first_execution, bar_width, label='basexDB', color=color_basex)
+    # Crea i barplot per Basex e Neo4j
+    plt.bar(index - bar_width / 2, values_basex_first_execution, bar_width, label='Basex', color=color_basex)
     plt.bar(index + bar_width / 2, values_neo4j_first_execution, bar_width, label='Neo4j', color=color_neo4j)
 
     plt.xlabel('Dataset Size')
@@ -73,7 +73,7 @@ for query in queries:
         table_data.append([size, f"{basex_time:.6f}", f"{neo4j_time:.6f}"])
 
     # Rendi i nomi delle colonne in grassetto utilizzando il parametro 'fontweight'
-    column_labels = ['Dataset Size', 'basexDB', 'Neo4j']
+    column_labels = ['Dataset Size', 'Basex', 'Neo4j']
     table = plt.table(cellText=table_data, colLabels=column_labels, cellLoc='center', loc='bottom', bbox=[0.0, -0.4, 1, 0.3], colColours=['#ffa50090', '#00ED6490', '#01406390'])
     
     # Imposta il font in grassetto per le etichette delle colonne
@@ -94,11 +94,11 @@ for query in queries:
     bar_width = 0.35
     index = np.arange(len(dataset_sizes))
 
-    # Estrai i valori di tempo di esecuzione medio per basexDB e Neo4j
+    # Estrai i valori di tempo di esecuzione medio per Basex e Neo4j
     values_basex_avg_30 = [data_basex_query_avg_30[data_basex_query_avg_30['Dataset'] == size]['Average'].values[0] for size in dataset_sizes]
     values_neo4j_avg_30 = [data_neo4j_query_avg_30[data_neo4j_query_avg_30['Dataset'] == size]['Average'].values[0] for size in dataset_sizes]
 
-    # Estrai gli intervalli di confidenza per basexDB e Neo4j
+    # Estrai gli intervalli di confidenza per Basex e Neo4j
     conf_intervals_basex = [extract_confidence_values(data_basex_query_avg_30[data_basex_query_avg_30['Dataset'] == size]['Confidence Interval (Min, Max)'].values[0]) for size in dataset_sizes]
     conf_intervals_neo4j = [extract_confidence_values(data_neo4j_query_avg_30[data_neo4j_query_avg_30['Dataset'] == size]['Confidence Interval (Min, Max)'].values[0]) for size in dataset_sizes]
 
@@ -112,8 +112,8 @@ for query in queries:
     basex_yerr = [np.array([values_basex_avg_30[i] - conf_basex_min[i], conf_basex_max[i] - values_basex_avg_30[i]]) for i in range(len(dataset_sizes))]
     neo4j_yerr = [np.array([values_neo4j_avg_30[i] - conf_neo4j_min[i], conf_neo4j_max[i] - values_neo4j_avg_30[i]]) for i in range(len(dataset_sizes))]
 
-    # Crea i barplot con barre di errore per basexDB e Neo4j
-    plt.bar(index - bar_width / 2, values_basex_avg_30, bar_width, yerr=np.array(basex_yerr).T, capsize=5, label='basexDB', color=color_basex)
+    # Crea i barplot con barre di errore per Basex e Neo4j
+    plt.bar(index - bar_width / 2, values_basex_avg_30, bar_width, yerr=np.array(basex_yerr).T, capsize=5, label='Basex', color=color_basex)
     plt.bar(index + bar_width / 2, values_neo4j_avg_30, bar_width, yerr=np.array(neo4j_yerr).T, capsize=5, label='Neo4j', color=color_neo4j)
 
     plt.xlabel('Dataset Size')
@@ -128,7 +128,7 @@ for query in queries:
     for size, basex_avg, neo4j_avg in zip(dataset_sizes, values_basex_avg_30, values_neo4j_avg_30):
         table_data.append([size, f"{basex_avg:.6f}", f"{neo4j_avg:.6f}"])
 
-    column_labels = ['Dataset Size', 'basexDB', 'Neo4j']
+    column_labels = ['Dataset Size', 'Basex', 'Neo4j']
     table = plt.table(cellText=table_data, colLabels=column_labels, cellLoc='center', loc='bottom', bbox=[0.0, -0.4, 1, 0.3], colColours=['#ffa50090', '#00ED6490', '#01406390'])
 
     # Imposta il font in grassetto per le etichette delle colonne

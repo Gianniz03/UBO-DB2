@@ -56,7 +56,7 @@ def query2(session, percentage):
 
         let $company := collection(concat("UBO_", '{percentage}'))//ubo_record[@entity_type='companies' and id=9133]
 
-        let $admins_ids := tokenize(substring-before(substring-after($company/administrators/text(), '['), ']'), ',\s*')
+        let $admins_ids := tokenize(substring-before(substring-after($company/administrators/text(), '['), ']'), ',\\s*')
 
         let $admins := 
             for $admin_id in $admins_ids
@@ -84,13 +84,13 @@ def query3(session, percentage):
 
         let $company := collection(concat("UBO_", '{percentage}'))//ubo_record[@entity_type='companies' and id={company_id}]
         
-        let $admins_ids := tokenize(substring-before(substring-after($company/administrators/text(), '['), ']'), ',\s*')
+        let $admins_ids := tokenize(substring-before(substring-after($company/administrators/text(), '['), ']'), ',\\s*')
         
         let $admins := 
             for $admin_id in $admins_ids
             return collection(concat("UBO_", '{percentage}'))//ubo_record[@entity_type='administrators' and id=xs:integer($admin_id)]
 
-        let $ubo_ids := tokenize(substring-before(substring-after($company/ubo/text(), '['), ']'), ',\s*')
+        let $ubo_ids := tokenize(substring-before(substring-after($company/ubo/text(), '['), ']'), ',\\s*')
 
         let $ubos := 
             for $ubo_id in $ubo_ids
@@ -141,13 +141,13 @@ def query4(session, percentage):
 
     let $company := collection(concat("UBO_", '{percentage}'))//ubo_record[@entity_type='companies' and id={company_id}]
 
-    let $admins_ids := tokenize(substring-before(substring-after($company/administrators/text(), '['), ']'), ',\s*')
+    let $admins_ids := tokenize(substring-before(substring-after($company/administrators/text(), '['), ']'), ',\\s*')
 
     let $admins := 
         for $admin_id in $admins_ids
         return collection(concat("UBO_", '{percentage}'))//ubo_record[@entity_type='administrators' and id=xs:integer($admin_id)]
 
-    let $ubo_ids := tokenize(substring-before(substring-after($company/ubo/text(), '['), ']'), ',\s*')
+    let $ubo_ids := tokenize(substring-before(substring-after($company/ubo/text(), '['), ']'), ',\\s*')
 
     let $ubos := 
         for $ubo_id in $ubo_ids
@@ -155,7 +155,7 @@ def query4(session, percentage):
         where xs:decimal($ubo_record/ownership_percentage) > {ubo_percentage}
         return $ubo_record
 
-    let $transaction_ids := tokenize(substring-before(substring-after($company/transactions/text(), '['), ']'), ',\s*')
+    let $transaction_ids := tokenize(substring-before(substring-after($company/transactions/text(), '['), ']'), ',\\s*')
 
     let $start_date := xs:date("{start_date}")
     let $end_date := xs:date("{end_date}")
@@ -216,13 +216,13 @@ def query5(session, percentage):
 
     let $company := collection(concat("UBO_", '{percentage}'))//ubo_record[@entity_type='companies' and id={company_id}]
 
-    let $admins_ids := tokenize(substring-before(substring-after($company/administrators/text(), '['), ']'), ',\s*')
+    let $admins_ids := tokenize(substring-before(substring-after($company/administrators/text(), '['), ']'), ',\\s*')
 
     let $admins := 
         for $admin_id in $admins_ids
         return collection(concat("UBO_", '{percentage}'))//ubo_record[@entity_type='administrators' and id=xs:integer($admin_id)]
 
-    let $ubo_ids := tokenize(substring-before(substring-after($company/ubo/text(), '['), ']'), ',\s*')
+    let $ubo_ids := tokenize(substring-before(substring-after($company/ubo/text(), '['), ']'), ',\\s*')
 
     let $ubos := 
         for $ubo_id in $ubo_ids
@@ -230,7 +230,7 @@ def query5(session, percentage):
         where xs:decimal($ubo_record/ownership_percentage) > {ubo_percentage}
         return $ubo_record
 
-    let $transaction_ids := tokenize(substring-before(substring-after($company/transactions/text(), '['), ']'), ',\s*')
+    let $transaction_ids := tokenize(substring-before(substring-after($company/transactions/text(), '['), ']'), ',\\s*')
 
     let $date := xs:date("{date}")
 
@@ -242,7 +242,7 @@ def query5(session, percentage):
 
     let $total_transaction_amount := sum($transactions/amount)
 
-    let $kyc_aml_ids := tokenize(substring-before(substring-after($company/kyc_aml_checks/text(), '['), ']'), ',\s*')
+    let $kyc_aml_ids := tokenize(substring-before(substring-after($company/kyc_aml_checks/text(), '['), ']'), ',\\s*')
 
     let $kyc_aml_results := 
         for $kyc_aml_id in $kyc_aml_ids
@@ -297,6 +297,13 @@ def main():
     session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
 
     percentages = ['100', '75', '50', '25']  # Percentuali del dataset
+    # Dizionario per la mappatura diretta dei dataset ai valori con il simbolo della percentuale nei file di ResponseTime
+    dataset_mapping = {
+        '100': '100%',
+        '75': '75%',
+        '50': '50%',
+        '25': '25%'
+    }
     first_execution_response_times = {}
     average_response_times = {}
 
@@ -396,12 +403,14 @@ def main():
 
         print("-" * 70)  # Separatore tra le diverse percentuali
 
+
     # Salva i risultati
     with open('BaseX/ResponseTimes/basex_response_times_first_execution.csv', mode='w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(['Dataset', 'Query', 'Milliseconds'])
         for query, first_execution_time in first_execution_response_times.items():
             dataset, query = query.split(' - ')
+            dataset = dataset_mapping.get(dataset, dataset)
             writer.writerow([dataset, query, first_execution_time])
 
     with open('BaseX/ResponseTimes/basex_response_times_average_30.csv', mode='w', newline='') as file:
@@ -409,9 +418,10 @@ def main():
         writer.writerow(['Dataset', 'Query', 'Milliseconds', 'Average', 'Confidence Interval (Min, Max)'])
         for query, (average_time_subsequent, mean_value, margin_of_error) in average_response_times.items():
             dataset, query_name = query.split(' - ')
+            dataset = dataset_mapping.get(dataset, dataset)
             min_interval = round(mean_value - margin_of_error, 2)
             max_interval = round(mean_value + margin_of_error, 2)
-            writer.writerow([dataset, query_name, average_time_subsequent, mean_value, f"{min_interval}, {max_interval}"])
+            writer.writerow([dataset, query_name, average_time_subsequent, mean_value, f"[{min_interval}, {max_interval}]"])
         print("Average response times were written in 'basex_response_times_first_execution.csv' and 'basex_response_times_average_30.csv'.")
 
     session.close()
