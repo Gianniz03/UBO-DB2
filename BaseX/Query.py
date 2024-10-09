@@ -31,7 +31,7 @@ def measure_query_performance(session, query_function, percentage, iterations=30
 
 # Query 1: Recupera un'azienda per nome
 def query1(session, percentage, entity_type="companies"):
-    company_name = 'Roberts, Brown and Moore'
+    company_name = 'Kelly-Decker'
     
     # Query dinamica che cambia in base al tipo di entità
     query = f"""
@@ -48,7 +48,7 @@ def query1(session, percentage, entity_type="companies"):
 
 # Query 2: Recupera i dettagli di un'azienda e dei suoi amministratori
 def query2(session, percentage):
-    company_id = 9133  # L'ID dell'azienda di cui vuoi recuperare i dettagli
+    company_id = 9710  # L'ID dell'azienda di cui vuoi recuperare i dettagli
     
     query = f"""
         declare option output:method "xml";
@@ -77,7 +77,7 @@ def query2(session, percentage):
 
 # Query 3: Recupera i dettagli dell'azienda, dei suoi amministratori e degli UBO con più del 25%
 def query3(session, percentage):
-    company_id = 9133  # Id della compagnia da recuperare
+    company_id = 9710  # Id della compagnia da recuperare
     query = f"""
         declare option output:method "xml";
         declare option output:indent "yes";
@@ -130,7 +130,7 @@ def query3(session, percentage):
 
 # Query 4: Recupera i dettagli dell'azienda, dei suoi amministratori, UBO e la somma delle transazioni in un periodo
 def query4(session, percentage):
-    company_id = 9133
+    company_id = 9710
     ubo_percentage = 25
     start_date = "2016-07-01"
     end_date = "2024-07-01"
@@ -205,7 +205,7 @@ def query4(session, percentage):
 
 # Query 5: Recupera i dettagli dell'azienda, dei suoi amministratori, UBO e la somma delle transazioni in una valuta specifica e risultati KYC/AML recenti
 def query5(session, percentage):
-    company_id = 9133
+    company_id = 9710
     ubo_percentage = 25
     currency = "EUR"
     date = "2003-01-01"
