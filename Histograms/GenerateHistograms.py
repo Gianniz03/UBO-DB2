@@ -57,7 +57,7 @@ for query in queries:
     values_neo4j_first_execution = [data_neo4j_query_first_execution[data_neo4j_query_first_execution['Dataset'] == size]['Milliseconds'].values[0] for size in dataset_sizes]
 
     # Crea i barplot per Basex e Neo4j
-    plt.bar(index - bar_width / 2, values_basex_first_execution, bar_width, label='Basex', color=color_basex)
+    plt.bar(index - bar_width / 2, values_basex_first_execution, bar_width, label='BaseX', color=color_basex)
     plt.bar(index + bar_width / 2, values_neo4j_first_execution, bar_width, label='Neo4j', color=color_neo4j)
 
     plt.xlabel('Dataset Size')
@@ -73,7 +73,7 @@ for query in queries:
         table_data.append([size, f"{basex_time:.6f}", f"{neo4j_time:.6f}"])
 
     # Rendi i nomi delle colonne in grassetto utilizzando il parametro 'fontweight'
-    column_labels = ['Dataset Size', 'Basex', 'Neo4j']
+    column_labels = ['Dataset Size', 'BaseX', 'Neo4j']
     table = plt.table(cellText=table_data, colLabels=column_labels, cellLoc='center', loc='bottom', bbox=[0.0, -0.4, 1, 0.3], colColours=['#ffa50090', '#00ED6490', '#01406390'])
     
     # Imposta il font in grassetto per le etichette delle colonne
@@ -113,7 +113,7 @@ for query in queries:
     neo4j_yerr = [np.array([values_neo4j_avg_30[i] - conf_neo4j_min[i], conf_neo4j_max[i] - values_neo4j_avg_30[i]]) for i in range(len(dataset_sizes))]
 
     # Crea i barplot con barre di errore per Basex e Neo4j
-    plt.bar(index - bar_width / 2, values_basex_avg_30, bar_width, yerr=np.array(basex_yerr).T, capsize=5, label='Basex', color=color_basex)
+    plt.bar(index - bar_width / 2, values_basex_avg_30, bar_width, yerr=np.array(basex_yerr).T, capsize=5, label='BaseX', color=color_basex)
     plt.bar(index + bar_width / 2, values_neo4j_avg_30, bar_width, yerr=np.array(neo4j_yerr).T, capsize=5, label='Neo4j', color=color_neo4j)
 
     plt.xlabel('Dataset Size')
@@ -128,7 +128,7 @@ for query in queries:
     for size, basex_avg, neo4j_avg in zip(dataset_sizes, values_basex_avg_30, values_neo4j_avg_30):
         table_data.append([size, f"{basex_avg:.6f}", f"{neo4j_avg:.6f}"])
 
-    column_labels = ['Dataset Size', 'Basex', 'Neo4j']
+    column_labels = ['Dataset Size', 'BaseX', 'Neo4j']
     table = plt.table(cellText=table_data, colLabels=column_labels, cellLoc='center', loc='bottom', bbox=[0.0, -0.4, 1, 0.3], colColours=['#ffa50090', '#00ED6490', '#01406390'])
 
     # Imposta il font in grassetto per le etichette delle colonne
