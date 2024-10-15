@@ -59,7 +59,7 @@ def insert_into_basex(db_name, xml_data):
             session.close()
     except Exception as e:
         print(f"Connection error: {e}")
-
+        
 # Crea il database 100%
 def create_db_100(df):
     data_100_xml = dataframe_to_xml(df)
@@ -67,24 +67,27 @@ def create_db_100(df):
 
 # Crea il database 75% dal 100%
 def create_db_75(df):
-    df_75 = df.sample(frac=0.75, random_state=1)
+    df_75 = df.sample(frac=0.75, random_state=1)  # Campiona il 75% del dataset originale
     data_75_xml = dataframe_to_xml(df_75)
     insert_into_basex('UBO_75', data_75_xml)
+    return df_75  # Restituisce il dataframe 75%
 
-# Crea il database 50% dal 100%
-def create_db_50(df):
-    df_50 = df.sample(frac=0.50, random_state=1)
+# Crea il database 50% dal 75%
+def create_db_50(df_75):
+    df_50 = df_75.sample(frac=0.6667, random_state=1)  # 50% di 75% = 66.67% del totale originale
     data_50_xml = dataframe_to_xml(df_50)
     insert_into_basex('UBO_50', data_50_xml)
+    return df_50  # Restituisce il dataframe 50%
 
-# Crea il database 25% dal 100%
-def create_db_25(df):
-    df_25 = df.sample(frac=0.25, random_state=1)
+# Crea il database 25% dal 50%
+def create_db_25(df_50):
+    df_25 = df_50.sample(frac=0.5, random_state=1)  # 50% di 50% = 50% del totale originale
     data_25_xml = dataframe_to_xml(df_25)
     insert_into_basex('UBO_25', data_25_xml)
 
 # Avvia il processo di creazione sequenziale dei database
-create_db_100(df)
-create_db_75(df)
-create_db_50(df)
-create_db_25(df)
+df_100 = df  # Dataset originale
+create_db_100(df_100)  # Crea il database 100%
+df_75 = create_db_75(df_100)  # Crea il database 75%
+df_50 = create_db_50(df_75)  # Crea il database 50%
+create_db_25(df_50)  # Crea il database 25%
