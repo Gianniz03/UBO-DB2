@@ -1,10 +1,6 @@
 import pandas as pd
 from py2neo import Graph, Node, Relationship
-from faker import Faker
 import random
-
-# Inizializza l'oggetto Faker per generare dati fittizi
-fake = Faker()
 
 # Funzione per creare nodi e relazioni nel grafo Neo4j a partire dai dataset forniti.
 def create_graph(graph, admins, shareholders, ubos, transactions, companies, kyc_aml_checks):
@@ -44,31 +40,42 @@ def create_graph(graph, admins, shareholders, ubos, transactions, companies, kyc
         # Crea relazioni tra aziende e amministratori
         for admin_id in eval(row['administrators']):
             if admin_id in admin_nodes:
-                rel = Relationship(company_node, "COMPANY_HAS_ADMINISTRATOR", admin_nodes[admin_id], role="Administrator", start_date=fake.date_between(start_date='-5y', end_date='-1y'), end_date=None)
+                rel = Relationship(company_node, "COMPANY_HAS_ADMINISTRATOR", admin_nodes[admin_id], 
+                                   role="Administrator", start_date=random.choice(['2020-01-01', '2021-01-01', '2022-01-01']), end_date=None)
                 graph.create(rel)
 
         # Crea relazioni tra aziende e azionisti
         for shareholder_id in eval(row['shareholders']):
             if shareholder_id in shareholder_nodes:
-                rel = Relationship(company_node, "COMPANY_HAS_SHAREHOLDER", shareholder_nodes[shareholder_id], ownership_percentage=random.uniform(0.1, 100), purchase_date=fake.date_between(start_date='-10y', end_date='-1y'))
+                rel = Relationship(company_node, "COMPANY_HAS_SHAREHOLDER", shareholder_nodes[shareholder_id], 
+                                   ownership_percentage=shareholder_nodes[shareholder_id]['ownership_percentage'], 
+                                   purchase_date=random.choice(['2020-01-01', '2021-01-01', '2022-01-01']))
                 graph.create(rel)
 
         # Crea relazioni tra aziende e UBO
         for ubo_id in eval(row['ubo']):
             if ubo_id in ubo_nodes:
-                rel = Relationship(company_node, "COMPANY_HAS_UBO", ubo_nodes[ubo_id], ownership_percentage=random.uniform(0.1, 100), purchase_date=fake.date_between(start_date='-10y', end_date='-1y'))
+                rel = Relationship(company_node, "COMPANY_HAS_UBO", ubo_nodes[ubo_id], 
+                                   ownership_percentage=ubo_nodes[ubo_id]['ownership_percentage'], 
+                                   purchase_date=random.choice(['2020-01-01', '2021-01-01', '2022-01-01']))
                 graph.create(rel)
 
         # Crea relazioni tra aziende e transazioni
         for transaction_id in eval(row['transactions']):
             if transaction_id in transaction_nodes:
-                rel = Relationship(company_node, "COMPANY_HAS_TRANSACTION", transaction_nodes[transaction_id], transaction_type=random.choice(['Purchase', 'Sale', 'Payment', 'Refund']), amount=random.uniform(10.0, 10000.0), date=fake.date_between(start_date='-5y', end_date='today'), currency=random.choice(['EUR', 'USD', 'GBP', 'JPY', 'AUD']))
+                rel = Relationship(company_node, "COMPANY_HAS_TRANSACTION", transaction_nodes[transaction_id], 
+                                   transaction_type=transaction_nodes[transaction_id]['type'], 
+                                   amount=transaction_nodes[transaction_id]['amount'], 
+                                   date=transaction_nodes[transaction_id]['date'], 
+                                   currency=transaction_nodes[transaction_id]['currency'])
                 graph.create(rel)
 
     # Crea relazioni per i controlli KYC/AML
     for _, row in kyc_aml_checks.iterrows():
         if row['ubo_id'] in ubo_nodes:
-            rel = Relationship(ubo_nodes[row['ubo_id']], "UBO_HAS_CHECKS", Node("KYC_AML_Check", id=row['id'], check_type=row['type'], result=row['result'], date=row['date'], notes=row['notes']), check_type=row['type'], result=row['result'], date=row['date'], notes=row['notes'])
+            rel = Relationship(ubo_nodes[row['ubo_id']], "UBO_HAS_CHECKS", 
+                               Node("KYC_AML_Check", id=row['id'], check_type=row['type'], result=row['result'], date=row['date'], notes=row['notes']), 
+                               check_type=row['type'], result=row['result'], date=row['date'], notes=row['notes'])
             graph.create(rel)
 
 # Carica i dataset dai file CSV
