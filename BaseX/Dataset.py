@@ -12,11 +12,11 @@ csv_files = {
     'ubo': 'Dataset/File/ubo.csv'
 }
 
-# Leggi tutti i file CSV in un unico DataFrame pandas, aggiungendo una colonna 'entity_type' per indicare l'entità di origine
+# Legge tutti i file CSV in un unico DataFrame pandas, aggiungendo una colonna 'entity_type' per indicare l'entità di origine
 dfs = []
 for entity_type, file_path in csv_files.items():
     df = pd.read_csv(file_path, encoding='ISO-8859-1')
-    df['entity_type'] = entity_type  # Aggiungi una colonna per l'entità
+    df['entity_type'] = entity_type  # Aggiunge una colonna per l'entità
     dfs.append(df)
 
 df = pd.concat(dfs, ignore_index=True)  # Combina tutti i DataFrame in uno solo
@@ -32,11 +32,11 @@ def dataframe_to_xml(df):
     xml = ['<ubo_records>']
     for _, row in df.iterrows():
         entity_type = row['entity_type']
-        xml.append(f'  <ubo_record entity_type="{entity_type}">')  # Aggiungi attributo entity_type
+        xml.append(f'  <ubo_record entity_type="{entity_type}">')  # Aggiunge attributo entity_type
         for field in df.columns:
-            if field != 'entity_type':  # Non aggiungere il campo 'entity_type' come tag
+            if field != 'entity_type':  # Non aggiunge il campo 'entity_type' come tag
                 value = row[field]
-                if pd.notna(value):  # Aggiungi solo i campi non NaN
+                if pd.notna(value):  # Aggiunge solo i campi non NaN
                     escaped_value = escape_xml_chars(str(value))  # Escapa i caratteri speciali
                     xml.append(f'    <{field}>{escaped_value}</{field}>')
         xml.append('  </ubo_record>')
@@ -59,7 +59,7 @@ def insert_into_basex(db_name, xml_data):
             session.close()
     except Exception as e:
         print(f"Connection error: {e}")
-        
+
 # Crea il database 100%
 def create_db_100(df):
     data_100_xml = dataframe_to_xml(df)
