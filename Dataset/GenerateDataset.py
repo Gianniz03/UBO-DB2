@@ -7,12 +7,13 @@ from faker import Faker
 fake = Faker()
 
 # Definisci il numero di record da generare per ciascun tipo di entità
-NUM_ADMINISTRATORS = 100
-NUM_COMPANIES = 10000
-NUM_UBO = 1000
-NUM_TRANSACTIONS = 20000
-NUM_KYC_AML_CHECKS = 5000
-NUM_SHAREHOLDERS = 100
+NUM_ADMINISTRATORS = 5000        # Ogni amministratore può lavorare per più aziende
+NUM_COMPANIES = 50000            # Numero totale di aziende
+NUM_UBO = 10000                  # I beneficiari possono avere partecipazioni in più aziende
+NUM_TRANSACTIONS = 400000        # Le transazioni sono molto numerose e frequenti
+NUM_KYC_AML_CHECKS = 30000       # KYC/AML checks sono più rari ma importanti
+NUM_SHAREHOLDERS = 5000          # Gli azionisti sono meno numerosi, ma possono partecipare in più aziende
+
 
 # Definisci le forme legali delle aziende e le valute
 legal_forms = ['S.r.l.', 'S.p.A.', 'S.a.S.', 'S.n.C.', 'S.r.l. a socio unico', 'Cooperative', 'Onlus']
