@@ -177,9 +177,6 @@ for company_id in range(1, NUM_COMPANIES + 1):
     num_transactions = random.randint(1, 5)
     transactions_ids = random.sample(range(1, NUM_TRANSACTIONS + 1), num_transactions)
     
-    num_kyc_aml_checks = random.randint(1, 3)
-    kyc_aml_checks_ids = random.sample(range(1, NUM_KYC_AML_CHECKS + 1), num_kyc_aml_checks)
-    
     companies.append({
         'id': company_id,
         'name': name,
@@ -190,13 +187,12 @@ for company_id in range(1, NUM_COMPANIES + 1):
         'administrators': administrators_ids,
         'shareholders': shareholders_ids,
         'ubo': ubos_ids,
-        'transactions': transactions_ids,
-        'kyc_aml_checks': kyc_aml_checks_ids
+        'transactions': transactions_ids
     })
 
 # Scrive i dati delle aziende in un file CSV
 with open('Dataset/File/companies.csv', 'w', newline='') as csvfile:
-    fieldnames = ['id', 'name', 'address', 'legal_form', 'registration_details', 'financial_data', 'administrators', 'shareholders', 'ubo', 'transactions', 'kyc_aml_checks']
+    fieldnames = ['id', 'name', 'address', 'legal_form', 'registration_details', 'financial_data', 'administrators', 'shareholders', 'ubo', 'transactions']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
     writer.writerows(companies)
