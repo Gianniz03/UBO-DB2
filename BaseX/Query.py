@@ -29,6 +29,7 @@ def measure_query_performance(session, query_function, percentage, iterations=30
     
     return average_time_subsequent, mean, margin_of_error
 
+# Query testate anche su BaseXGUI
 # Query 1: Recupera un'azienda per nome
 def query1(session, percentage, entity_type="companies"):
     company_name = 'Kelly-Decker'
@@ -78,6 +79,7 @@ def query2(session, percentage):
 # Query 3: Recupera i dettagli dell'azienda, dei suoi amministratori e degli UBO con più del 25%
 def query3(session, percentage):
     company_id = 9710  # Id della compagnia da recuperare
+
     query = f"""
         declare option output:method "xml";
         declare option output:indent "yes";

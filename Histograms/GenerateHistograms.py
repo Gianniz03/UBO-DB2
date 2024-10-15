@@ -41,6 +41,7 @@ def extract_confidence_values(confidence_interval_str):
 
 # Cicla attraverso ogni query per generare i grafici
 for query in queries:
+    # Come seguito dalla guida su StackOverflow
     # Filtra i dati per la query corrente
     data_basex_query_first_execution = data_basex_first_execution[data_basex_first_execution['Query'] == query]
     data_basex_query_avg_30 = data_basex_avg_30[data_basex_avg_30['Query'] == query]
