@@ -16,7 +16,7 @@ csv_files = {
 dfs = []
 for entity_type, file_path in csv_files.items():
     df = pd.read_csv(file_path, encoding='ISO-8859-1')
-    df['entity_type'] = entity_type  # Aggiunge una colonna per l'entità
+    df['entity_type'] = entity_type
     dfs.append(df)
 
 df = pd.concat(dfs, ignore_index=True)  # Combina tutti i DataFrame in uno solo
@@ -46,6 +46,7 @@ def dataframe_to_xml(df):
 # Funzione per connettersi a BaseX e inserire i dati
 def insert_into_basex(db_name, xml_data):
     try:
+        # Come da Repository ufficiale di BaseX per connettersi al db
         session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
         try:
             print(f"Creating database: {db_name}")
