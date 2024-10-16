@@ -83,8 +83,8 @@ def query3(graph):
 
 ### Tempi di prima esecuzione
 
-![Foto Prima Esecuzione](../Histograms/Histogram_Time_Before_Execution_Query%205.png)
+![Foto Prima Esecuzione](../Histograms/Histogram_Time_Before_Execution_Query%203.png)
 
 ### Tempi di esecuzione medi
 
-![Foto Esecuzione Medi](../Histograms/Histogram_Average_Execution_Time_Query%205.png)
+![Foto Esecuzione Medi](../Histograms/Histogram_Average_Execution_Time_Query%203.png)

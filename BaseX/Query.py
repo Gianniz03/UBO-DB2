@@ -244,49 +244,48 @@ def query5(session, percentage):
 
     let $total_transaction_amount := sum($transactions/amount)
 
-    let $kyc_aml_ids := tokenize(substring-before(substring-after($company/kyc_aml_checks/text(), '['), ']'), ',\\s*')
+    let $shareholder_ids := tokenize(substring-before(substring-after($company/shareholders/text(), '['), ']'), ',\\s*')
 
-    let $kyc_aml_results := 
-        for $kyc_aml_id in $kyc_aml_ids
-        let $kyc_aml_checks_record := collection(concat("UBO_", '{percentage}'))//ubo_record[@entity_type='kyc_aml_checks' and id=xs:integer($kyc_aml_id)]
-        where xs:date($kyc_aml_checks_record/date) >= $date
-        return $kyc_aml_checks_record
+    let $shareholders := 
+        for $shareholder_id in $shareholder_ids
+        let $shareholder_record := collection(concat("UBO_", '{percentage}'))//ubo_record[@entity_type='shareholders' and id=xs:integer($shareholder_id)]
+        return $shareholder_record
 
     return 
-        <result>
-            {{
-                $company,
-                <administrators>
-                    {{
-                        if (exists($admins)) 
-                        then $admins 
-                        else <message>No administrators found</message>
-                    }}
-                </administrators>,
-                <ubos>
-                    {{
-                        if (exists($ubos)) 
-                        then $ubos 
-                        else <message>No UBOs found with more than {ubo_percentage}% ownership</message>
-                    }}
-                </ubos>,
-                <transactions>
-                    {{
-                        if (exists($transactions)) 
-                        then $transactions 
-                        else <message>No transactions found in the specified period with the currency {currency}</message>
-                    }}
-                </transactions>,
-                <total_transaction_amount>{{ $total_transaction_amount }}</total_transaction_amount>,
-                <kyc_aml_results>
-                    {{
-                        if (exists($kyc_aml_results)) 
-                        then $kyc_aml_results 
-                        else <message>No KYC/AML results found after {date}</message>
-                    }}
-                </kyc_aml_results>
-            }}
-        </result>
+    <result>
+        {{
+            $company,
+            <administrators>
+                {{
+                    if (exists($admins)) 
+                    then $admins 
+                    else <message>No administrators found</message>
+                }}
+            </administrators>,
+            <ubos>
+                {{
+                    if (exists($ubos)) 
+                    then $ubos 
+                    else <message>No UBOs found with more than {ubo_percentage}% ownership</message>
+                }}
+            </ubos>,
+            <transactions>
+                {{
+                    if (exists($transactions)) 
+                    then $transactions 
+                    else <message>No transactions found in the specified period with the currency {currency}</message>
+                }}
+            </transactions>,
+            <total_transaction_amount>{{ $total_transaction_amount }}</total_transaction_amount>,
+            <shareholders>
+                {{
+                    if (exists($shareholders)) 
+                    then $shareholders 
+                    else <message>No shareholders found</message>
+                }}
+            </shareholders>
+        }}
+    </result>
     """
 
     result = session.query(query).execute()
