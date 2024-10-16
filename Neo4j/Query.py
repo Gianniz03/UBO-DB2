@@ -43,7 +43,7 @@ def measure_query_performance(graph, query_func, percentage, iterations=30):
 
 # Definizione della query 1
 def query1(graph):
-    company_name = 'Robertson Inc'
+    company_name = 'Parker, Bishop and Jacobs'
     query = f"""
     MATCH (c:Companies {{name: '{company_name}'}})
     RETURN c
@@ -53,7 +53,7 @@ def query1(graph):
 
 # Definizione della query 2
 def query2(graph):
-    company_id = 2764
+    company_id = 431
     query = f"""
     MATCH (c:Companies {{id: {company_id}}})
     OPTIONAL MATCH (c)-[:COMPANY_HAS_ADMINISTRATOR]->(a:Administrators)
@@ -64,7 +64,7 @@ def query2(graph):
 
 # Definizione della query 3
 def query3(graph):
-    company_id = 2764
+    company_id = 431
     query = f"""
     MATCH (c:Companies {{id: {company_id}}})
     OPTIONAL MATCH (c)-[:COMPANY_HAS_ADMINISTRATOR]->(a:Administrators)
@@ -78,7 +78,7 @@ def query3(graph):
 
 # Definizione della query 4
 def query4(graph):
-    company_id = 2764
+    company_id = 431
     start_date = "2016-07-01"
     end_date = "2024-07-01"
     ubo_percentage = 25
@@ -95,7 +95,7 @@ def query4(graph):
     return result
 
 def query5(graph):
-    company_id = 2764
+    company_id = 431
     currency = "EUR"
     date = "2003-01-01"
 

@@ -7,12 +7,12 @@ from faker import Faker
 fake = Faker()
 
 # Numero record per ogni entità
-NUM_ADMINISTRATORS = 5000        # Ogni amministratore può lavorare per più aziende
-NUM_COMPANIES = 50000            # Numero totale di aziende
-NUM_UBO = 10000                  # I beneficiari possono avere partecipazioni in più aziende
-NUM_TRANSACTIONS = 400000        # Le transazioni sono molto numerose e frequenti
-NUM_KYC_AML_CHECKS = 30000       # KYC/AML checks sono più rari ma importanti
-NUM_SHAREHOLDERS = 5000          # Gli azionisti sono meno numerosi, ma possono partecipare in più aziende
+NUM_ADMINISTRATORS = 100        # Ogni amministratore può lavorare per più aziende
+NUM_COMPANIES = 1000            # Numero totale di aziende
+NUM_UBO = 200                  # I beneficiari possono avere partecipazioni in più aziende
+NUM_TRANSACTIONS = 8000        # Le transazioni sono molto numerose e frequenti
+NUM_KYC_AML_CHECKS = 600       # KYC/AML checks sono più rari ma importanti
+NUM_SHAREHOLDERS = 100          # Gli azionisti sono meno numerosi, ma possono partecipare in più aziende
 
 
 # Forme legali delle aziende e le valute
