@@ -3,22 +3,23 @@ import csv
 import json
 from faker import Faker
 
-# Crea un'istanza del generatore di dati falsi
+# Istanza per il generatore di dati falsi
 fake = Faker()
 
-# Definisci il numero di record da generare per ciascun tipo di entità
-NUM_ADMINISTRATORS = 100
-NUM_COMPANIES = 10000
-NUM_UBO = 1000
-NUM_TRANSACTIONS = 20000
-NUM_KYC_AML_CHECKS = 5000
-NUM_SHAREHOLDERS = 100
+# Numero record per ogni entità
+NUM_ADMINISTRATORS = 5000        # Ogni amministratore può lavorare per più aziende
+NUM_COMPANIES = 50000            # Numero totale di aziende
+NUM_UBO = 10000                  # I beneficiari possono avere partecipazioni in più aziende
+NUM_TRANSACTIONS = 400000        # Le transazioni sono molto numerose e frequenti
+NUM_KYC_AML_CHECKS = 30000       # KYC/AML checks sono più rari ma importanti
+NUM_SHAREHOLDERS = 5000          # Gli azionisti sono meno numerosi, ma possono partecipare in più aziende
 
-# Definisci le forme legali delle aziende e le valute
+
+# Forme legali delle aziende e le valute
 legal_forms = ['S.r.l.', 'S.p.A.', 'S.a.S.', 'S.n.C.', 'S.r.l. a socio unico', 'Cooperative', 'Onlus']
 currencies = ['EUR', 'USD', 'GBP', 'JPY', 'AUD']
 
-# Genera i dati per gli amministratori
+# Generazione dati per gli amministratori
 administrators = []
 for administrator_id in range(1, NUM_ADMINISTRATORS + 1):
     name = fake.name()
@@ -33,7 +34,7 @@ for administrator_id in range(1, NUM_ADMINISTRATORS + 1):
         'nationality': nationality
     })
 
-# Scrivi i dati degli amministratori in un file CSV
+# Scrive i dati degli amministratori in un file CSV
 with open('Dataset/File/administrators.csv', 'w', newline='') as csvfile:
     fieldnames = ['id', 'name', 'address', 'birthdate', 'nationality']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -42,7 +43,7 @@ with open('Dataset/File/administrators.csv', 'w', newline='') as csvfile:
 
 print("CSV file 'administrators.csv' successfully created.")
 
-# Genera i dati per gli azionisti
+# Generazione dati per gli azionisti
 shareholders = []
 for shareholder_id in range(1, NUM_SHAREHOLDERS + 1):
     name = fake.name()
@@ -62,7 +63,7 @@ for shareholder_id in range(1, NUM_SHAREHOLDERS + 1):
         'nationality': nationality
     })
 
-# Scrivi i dati degli azionisti in un file CSV
+# Scrive i dati degli azionisti in un file CSV
 with open('Dataset/File/shareholders.csv', 'w', newline='') as csvfile:
     fieldnames = ['id', 'name', 'type', 'ownership_percentage', 'address', 'birthdate', 'nationality']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -71,7 +72,7 @@ with open('Dataset/File/shareholders.csv', 'w', newline='') as csvfile:
 
 print("CSV file 'shareholders.csv' successfully created.")
 
-# Genera i dati per i beneficiari effettivi (UBO)
+# Generazione dati per i beneficiari effettivi (UBO)
 ubos = []
 for ubo_id in range(1, NUM_UBO + 1):
     name = fake.name()
@@ -91,7 +92,7 @@ for ubo_id in range(1, NUM_UBO + 1):
         'type': ubo_type
     })
 
-# Scrivi i dati degli UBO in un file CSV
+# Scrive i dati degli UBO in un file CSV
 with open('Dataset/File/ubo.csv', 'w', newline='') as csvfile:
     fieldnames = ['id', 'name', 'address', 'birthdate', 'nationality', 'ownership_percentage', 'type']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -100,7 +101,7 @@ with open('Dataset/File/ubo.csv', 'w', newline='') as csvfile:
 
 print("CSV file 'ubo.csv' successfully created.")
 
-# Genera i dati per le transazioni
+# Generazione dati per le transazioni
 transactions = []
 for transaction_id in range(1, NUM_TRANSACTIONS + 1):
     transaction_type = random.choice(['Purchase', 'Sale', 'Payment', 'Refund'])
@@ -116,7 +117,7 @@ for transaction_id in range(1, NUM_TRANSACTIONS + 1):
         'currency': currency
     })
 
-# Scrivi i dati delle transazioni in un file CSV
+# Scrive i dati delle transazioni in un file CSV
 with open('Dataset/File/transactions.csv', 'w', newline='') as csvfile:
     fieldnames = ['id', 'type', 'amount', 'date', 'currency']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -125,7 +126,7 @@ with open('Dataset/File/transactions.csv', 'w', newline='') as csvfile:
 
 print("CSV file 'transactions.csv' successfully created.")
 
-# Genera i dati per i controlli KYC/AML
+# Generazione dati per i controlli KYC/AML
 kyc_aml_checks = []
 for kyc_aml_id in range(1, NUM_KYC_AML_CHECKS + 1):
     ubo_id = random.randint(1, NUM_UBO)
@@ -143,7 +144,7 @@ for kyc_aml_id in range(1, NUM_KYC_AML_CHECKS + 1):
         'notes': notes
     })
 
-# Scrivi i dati dei controlli KYC/AML in un file CSV
+# Scrive i dati dei controlli KYC/AML in un file CSV
 with open('Dataset/File/kyc_aml_checks.csv', 'w', newline='') as csvfile:
     fieldnames = ['id', 'ubo_id', 'type', 'result', 'date', 'notes']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -152,7 +153,7 @@ with open('Dataset/File/kyc_aml_checks.csv', 'w', newline='') as csvfile:
 
 print("CSV file 'kyc_aml_checks.csv' successfully created.")
 
-# Genera i dati per le aziende
+# Generazione dati per le aziende
 companies = []
 for company_id in range(1, NUM_COMPANIES + 1):
     name = fake.company()
@@ -176,9 +177,6 @@ for company_id in range(1, NUM_COMPANIES + 1):
     num_transactions = random.randint(1, 5)
     transactions_ids = random.sample(range(1, NUM_TRANSACTIONS + 1), num_transactions)
     
-    num_kyc_aml_checks = random.randint(1, 3)
-    kyc_aml_checks_ids = random.sample(range(1, NUM_KYC_AML_CHECKS + 1), num_kyc_aml_checks)
-    
     companies.append({
         'id': company_id,
         'name': name,
@@ -189,13 +187,12 @@ for company_id in range(1, NUM_COMPANIES + 1):
         'administrators': administrators_ids,
         'shareholders': shareholders_ids,
         'ubo': ubos_ids,
-        'transactions': transactions_ids,
-        'kyc_aml_checks': kyc_aml_checks_ids
+        'transactions': transactions_ids
     })
 
-# Scrivi i dati delle aziende in un file CSV
+# Scrive i dati delle aziende in un file CSV
 with open('Dataset/File/companies.csv', 'w', newline='') as csvfile:
-    fieldnames = ['id', 'name', 'address', 'legal_form', 'registration_details', 'financial_data', 'administrators', 'shareholders', 'ubo', 'transactions', 'kyc_aml_checks']
+    fieldnames = ['id', 'name', 'address', 'legal_form', 'registration_details', 'financial_data', 'administrators', 'shareholders', 'ubo', 'transactions']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
     writer.writerows(companies)

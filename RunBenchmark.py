@@ -2,18 +2,19 @@ import subprocess
 
 def execute_scripts():
     try:
-        # Esegui il primo script
+        # Esegue il codice delle query di BaseX
         print(f"Running BaseX/Query.py script")
         subprocess.run(['python', 'BaseX/Query.py'], check=True)
 
-        # Esegui il secondo script
+        # Esegue il codice delle query di Neo4j
         print(f"Running Neo4j/Query.py script")
         subprocess.run(['python', 'Neo4j/Query.py'], check=True)
 
-        # Esegui il terzo script
+        # Esegue il codice che crea gli istogrammi in base ai risultati delle query
         print(f"Running Histograms/GenerateHistograms.py script")
         subprocess.run(['python', 'Histograms/GenerateHistograms.py'], check=True)
 
+    # Eccezione 
     except subprocess.CalledProcessError as e:
         print(f"Error occurred while executing a script: {e}")
 
