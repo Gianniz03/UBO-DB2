@@ -1,7 +1,7 @@
-# Query 5: Recupera dettagli di un'azienda, i suoi amministratori, UBO, transazioni e controlli KYC/AML
+# Query 5: Recupera dettagli di un'azienda, i suoi amministratori, UBO, transazioni e i suoi azionisti
 
 ### Descrizione
-Questa query recupera i dettagli di un'azienda specifica, compresi gli amministratori associati, i beneficiari effettivi (UBO) con una partecipazione maggiore al 25%, le transazioni effettuate in una specifica valuta e data, e i risultati dei controlli KYC/AML. L'obiettivo è confrontare le prestazioni di BaseX e Neo4j nell'esecuzione di query per il recupero di dati aziendali e delle relative entità correlate.
+Questa query recupera i dettagli di un'azienda specifica, compresi gli amministratori associati, i beneficiari effettivi (UBO) con una partecipazione maggiore al 25%, le transazioni effettuate in una specifica valuta e data, e i suoi azionisti. L'obiettivo è confrontare le prestazioni di BaseX e Neo4j nell'esecuzione di query per il recupero di dati aziendali e delle relative entità correlate.
 
 ---
 
