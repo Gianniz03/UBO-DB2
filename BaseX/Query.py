@@ -29,9 +29,10 @@ def measure_query_performance(session, query_function, percentage, iterations=30
     
     return average_time_subsequent, mean, margin_of_error
 
+# Query testate anche su BaseXGUI
 # Query 1: Recupera un'azienda per nome
 def query1(session, percentage, entity_type="companies"):
-    company_name = 'Kelly-Decker'
+    company_name = 'Robertson Inc'
     
     # Query dinamica che cambia in base al tipo di entità
     query = f"""
@@ -48,7 +49,7 @@ def query1(session, percentage, entity_type="companies"):
 
 # Query 2: Recupera i dettagli di un'azienda e dei suoi amministratori
 def query2(session, percentage):
-    company_id = 9710  # L'ID dell'azienda di cui vuoi recuperare i dettagli
+    company_id = 2764  # L'ID dell'azienda di cui vuoi recuperare i dettagli
     
     query = f"""
         declare option output:method "xml";
@@ -77,7 +78,8 @@ def query2(session, percentage):
 
 # Query 3: Recupera i dettagli dell'azienda, dei suoi amministratori e degli UBO con più del 25%
 def query3(session, percentage):
-    company_id = 9710  # Id della compagnia da recuperare
+    company_id = 2764  # Id della compagnia da recuperare
+
     query = f"""
         declare option output:method "xml";
         declare option output:indent "yes";
@@ -130,7 +132,7 @@ def query3(session, percentage):
 
 # Query 4: Recupera i dettagli dell'azienda, dei suoi amministratori, UBO e la somma delle transazioni in un periodo
 def query4(session, percentage):
-    company_id = 9710
+    company_id = 2764
     ubo_percentage = 25
     start_date = "2016-07-01"
     end_date = "2024-07-01"
@@ -205,7 +207,7 @@ def query4(session, percentage):
 
 # Query 5: Recupera i dettagli dell'azienda, dei suoi amministratori, UBO e la somma delle transazioni in una valuta specifica e risultati KYC/AML recenti
 def query5(session, percentage):
-    company_id = 9710
+    company_id = 2764
     ubo_percentage = 25
     currency = "EUR"
     date = "2003-01-01"
@@ -242,49 +244,48 @@ def query5(session, percentage):
 
     let $total_transaction_amount := sum($transactions/amount)
 
-    let $kyc_aml_ids := tokenize(substring-before(substring-after($company/kyc_aml_checks/text(), '['), ']'), ',\\s*')
+    let $shareholder_ids := tokenize(substring-before(substring-after($company/shareholders/text(), '['), ']'), ',\\s*')
 
-    let $kyc_aml_results := 
-        for $kyc_aml_id in $kyc_aml_ids
-        let $kyc_aml_checks_record := collection(concat("UBO_", '{percentage}'))//ubo_record[@entity_type='kyc_aml_checks' and id=xs:integer($kyc_aml_id)]
-        where xs:date($kyc_aml_checks_record/date) >= $date
-        return $kyc_aml_checks_record
+    let $shareholders := 
+        for $shareholder_id in $shareholder_ids
+        let $shareholder_record := collection(concat("UBO_", '{percentage}'))//ubo_record[@entity_type='shareholders' and id=xs:integer($shareholder_id)]
+        return $shareholder_record
 
     return 
-        <result>
-            {{
-                $company,
-                <administrators>
-                    {{
-                        if (exists($admins)) 
-                        then $admins 
-                        else <message>No administrators found</message>
-                    }}
-                </administrators>,
-                <ubos>
-                    {{
-                        if (exists($ubos)) 
-                        then $ubos 
-                        else <message>No UBOs found with more than {ubo_percentage}% ownership</message>
-                    }}
-                </ubos>,
-                <transactions>
-                    {{
-                        if (exists($transactions)) 
-                        then $transactions 
-                        else <message>No transactions found in the specified period with the currency {currency}</message>
-                    }}
-                </transactions>,
-                <total_transaction_amount>{{ $total_transaction_amount }}</total_transaction_amount>,
-                <kyc_aml_results>
-                    {{
-                        if (exists($kyc_aml_results)) 
-                        then $kyc_aml_results 
-                        else <message>No KYC/AML results found after {date}</message>
-                    }}
-                </kyc_aml_results>
-            }}
-        </result>
+    <result>
+        {{
+            $company,
+            <administrators>
+                {{
+                    if (exists($admins)) 
+                    then $admins 
+                    else <message>No administrators found</message>
+                }}
+            </administrators>,
+            <ubos>
+                {{
+                    if (exists($ubos)) 
+                    then $ubos 
+                    else <message>No UBOs found with more than {ubo_percentage}% ownership</message>
+                }}
+            </ubos>,
+            <transactions>
+                {{
+                    if (exists($transactions)) 
+                    then $transactions 
+                    else <message>No transactions found in the specified period with the currency {currency}</message>
+                }}
+            </transactions>,
+            <total_transaction_amount>{{ $total_transaction_amount }}</total_transaction_amount>,
+            <shareholders>
+                {{
+                    if (exists($shareholders)) 
+                    then $shareholders 
+                    else <message>No shareholders found</message>
+                }}
+            </shareholders>
+        }}
+    </result>
     """
 
     result = session.query(query).execute()

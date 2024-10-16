@@ -12,11 +12,11 @@ csv_files = {
     'ubo': 'Dataset/File/ubo.csv'
 }
 
-# Leggi tutti i file CSV in un unico DataFrame pandas, aggiungendo una colonna 'entity_type' per indicare l'entità di origine
+# Legge tutti i file CSV in un unico DataFrame pandas, aggiungendo una colonna 'entity_type' per indicare l'entità di origine
 dfs = []
 for entity_type, file_path in csv_files.items():
     df = pd.read_csv(file_path, encoding='ISO-8859-1')
-    df['entity_type'] = entity_type  # Aggiungi una colonna per l'entità
+    df['entity_type'] = entity_type
     dfs.append(df)
 
 df = pd.concat(dfs, ignore_index=True)  # Combina tutti i DataFrame in uno solo
@@ -32,11 +32,11 @@ def dataframe_to_xml(df):
     xml = ['<ubo_records>']
     for _, row in df.iterrows():
         entity_type = row['entity_type']
-        xml.append(f'  <ubo_record entity_type="{entity_type}">')  # Aggiungi attributo entity_type
+        xml.append(f'  <ubo_record entity_type="{entity_type}">')  # Aggiunge attributo entity_type
         for field in df.columns:
-            if field != 'entity_type':  # Non aggiungere il campo 'entity_type' come tag
+            if field != 'entity_type':  # Non aggiunge il campo 'entity_type' come tag
                 value = row[field]
-                if pd.notna(value):  # Aggiungi solo i campi non NaN
+                if pd.notna(value):  # Aggiunge solo i campi non NaN
                     escaped_value = escape_xml_chars(str(value))  # Escapa i caratteri speciali
                     xml.append(f'    <{field}>{escaped_value}</{field}>')
         xml.append('  </ubo_record>')
@@ -46,6 +46,7 @@ def dataframe_to_xml(df):
 # Funzione per connettersi a BaseX e inserire i dati
 def insert_into_basex(db_name, xml_data):
     try:
+        # Come da Repository ufficiale di BaseX per connettersi al db
         session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
         try:
             print(f"Creating database: {db_name}")
@@ -67,24 +68,27 @@ def create_db_100(df):
 
 # Crea il database 75% dal 100%
 def create_db_75(df):
-    df_75 = df.sample(frac=0.75, random_state=1)
+    df_75 = df.sample(frac=0.75, random_state=1)  # Campiona il 75% del dataset originale
     data_75_xml = dataframe_to_xml(df_75)
     insert_into_basex('UBO_75', data_75_xml)
+    return df_75  # Restituisce il dataframe 75%
 
-# Crea il database 50% dal 100%
-def create_db_50(df):
-    df_50 = df.sample(frac=0.50, random_state=1)
+# Crea il database 50% dal 75%
+def create_db_50(df_75):
+    df_50 = df_75.sample(frac=0.6667, random_state=1)  # 50% di 75% = 66.67% del totale originale
     data_50_xml = dataframe_to_xml(df_50)
     insert_into_basex('UBO_50', data_50_xml)
+    return df_50  # Restituisce il dataframe 50%
 
-# Crea il database 25% dal 100%
-def create_db_25(df):
-    df_25 = df.sample(frac=0.25, random_state=1)
+# Crea il database 25% dal 50%
+def create_db_25(df_50):
+    df_25 = df_50.sample(frac=0.5, random_state=1)  # 50% di 50% = 50% del totale originale
     data_25_xml = dataframe_to_xml(df_25)
     insert_into_basex('UBO_25', data_25_xml)
 
 # Avvia il processo di creazione sequenziale dei database
-create_db_100(df)
-create_db_75(df)
-create_db_50(df)
-create_db_25(df)
+df_100 = df  # Dataset originale
+create_db_100(df_100)  # Crea il database 100%
+df_75 = create_db_75(df_100)  # Crea il database 75%
+df_50 = create_db_50(df_75)  # Crea il database 50%
+create_db_25(df_50)  # Crea il database 25%

@@ -43,7 +43,7 @@ def measure_query_performance(graph, query_func, percentage, iterations=30):
 
 # Definizione della query 1
 def query1(graph):
-    company_name = 'Kelly-Decker'
+    company_name = 'Robertson Inc'
     query = f"""
     MATCH (c:Companies {{name: '{company_name}'}})
     RETURN c
@@ -53,7 +53,7 @@ def query1(graph):
 
 # Definizione della query 2
 def query2(graph):
-    company_id = 9710
+    company_id = 2764
     query = f"""
     MATCH (c:Companies {{id: {company_id}}})
     OPTIONAL MATCH (c)-[:COMPANY_HAS_ADMINISTRATOR]->(a:Administrators)
@@ -64,7 +64,7 @@ def query2(graph):
 
 # Definizione della query 3
 def query3(graph):
-    company_id = 9710
+    company_id = 2764
     query = f"""
     MATCH (c:Companies {{id: {company_id}}})
     OPTIONAL MATCH (c)-[:COMPANY_HAS_ADMINISTRATOR]->(a:Administrators)
@@ -78,7 +78,7 @@ def query3(graph):
 
 # Definizione della query 4
 def query4(graph):
-    company_id = 9710
+    company_id = 2764
     start_date = "2016-07-01"
     end_date = "2024-07-01"
     ubo_percentage = 25
@@ -95,7 +95,7 @@ def query4(graph):
     return result
 
 def query5(graph):
-    company_id = 9710
+    company_id = 2764
     currency = "EUR"
     date = "2003-01-01"
 
@@ -106,14 +106,13 @@ def query5(graph):
     OPTIONAL MATCH (c)-[:COMPANY_HAS_UBO]->(u:Ubo)
     WHERE u.ownership_percentage > 25
     OPTIONAL MATCH (c)-[:COMPANY_HAS_TRANSACTION]->(t:Transactions)
-    WHERE t.currency = "{currency}" AND t.date >= "{date}"
-    OPTIONAL MATCH (u)-[:UBO_HAS_CHECKS]->(k:KYC_AML_Check)
-    WHERE k.date >= "{date}"
-    RETURN c AS company,
-        collect(DISTINCT a) AS administrators,
-        collect(DISTINCT u) AS ubos,
-        sum(t.amount) AS total_amount,
-        collect(DISTINCT k) AS kyc_aml_checks
+    WHERE t.currency = '{currency}' AND t.date >= '{date}'
+    OPTIONAL MATCH (c)-[:COMPANY_HAS_SHAREHOLDER]->(s:Shareholders)
+    RETURN c as company,
+        collect(DISTINCT a) as administrators,
+        collect(DISTINCT u) as ubos,
+        sum(t.amount) as total_amount,
+        collect(DISTINCT s) as shareholders
     """
 
     # Esecuzione della query
