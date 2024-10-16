@@ -104,18 +104,18 @@ def query5(graph):
 
     # Query per recuperare l'azienda e i dettagli associati
     query = f"""
-    MATCH (c:Companies {id: {company_id}})
+    MATCH (c:Companies {{id: {company_id}}})
     OPTIONAL MATCH (c)-[:COMPANY_HAS_ADMINISTRATOR]->(a:Administrators)
     OPTIONAL MATCH (c)-[:COMPANY_HAS_UBO]->(u:Ubo)
     WHERE u.ownership_percentage > 25
     OPTIONAL MATCH (c)-[:COMPANY_HAS_TRANSACTION]->(t:Transactions)
-    WHERE t.currency = "{currency}" AND t.date >= "{date}"
+    WHERE t.currency = '{currency}' AND t.date >= '{date}'
     OPTIONAL MATCH (c)-[:COMPANY_HAS_SHAREHOLDER]->(s:Shareholders)
-    RETURN c AS company,
-        collect(DISTINCT a) AS administrators,
-        collect(DISTINCT u) AS ubos,
-        sum(t.amount) AS total_amount,
-        collect(DISTINCT s) AS shareholders
+    RETURN c as company,
+        collect(DISTINCT a) as administrators,
+        collect(DISTINCT u) as ubos,
+        sum(t.amount) as total_amount,
+        collect(DISTINCT s) as shareholders
     """
 
     # Esecuzione della query
